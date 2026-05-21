@@ -1,43 +1,49 @@
+@AGENTS.md
+
 # White Sands Website — Project Instructions
 
 ## Project Overview
-Building a professional website for **White Sands**, a general contracting construction company based in **Hawaii**.
+Building a professional website for **White Sands Construction Inc.**, a general contracting company based in **Hawaii**.
 
-- **Tool:** Google Stitch (AI-generated UI) — exports HTML/CSS/JS
-- **Stack:** Plain HTML/CSS/JS — no framework, no build step
-- **Hosting:** Vercel (connected to GitHub repo, auto-deploys on push)
+- **Stack:** Next.js 16 + Tailwind CSS v4 + TypeScript
+- **Animations:** Framer Motion
+- **Icons:** Lucide React
+- **Hosting:** Vercel (GitHub auto-deploy)
 - **Repo:** https://github.com/ImSpector-in/WhiteSands-Website.git
-- **Style:** Clean & modern
-- **Status:** In progress
+- **Style:** Clean & modern, inspired by castawayhawaii.com and hdcc.com
 
 ## Key Files
-- `PROJECT_BRIEF.md` — All client info: colors, logo, images, contact details, services. **Read this first before building anything.**
-- `assets/` — Logo files and images go here
-- `index.html` — Main entry point (exported from Stitch)
+- `PROJECT_BRIEF.md` — All client info: colors, images, contact details, services
+- `public/assets/` — Logo and all project photos
+- `app/` — Next.js App Router pages
+- `components/` — Reusable React components
 
-## Pages to Build
-1. **Home** — Hero section, headline, CTA
-2. **About** — Company story, mission, team
-3. **Services** — List of general contracting services
-4. **Gallery** — Photo grid of past work
-5. **Contact** — Contact form + phone/email/address
+## Pages
+1. **Home** (`app/page.tsx`) — Hero carousel, stats, services preview, portfolio teaser, CTA
+2. **About** (`app/about/page.tsx`) — Company story, why choose us
+3. **Services** (`app/services/page.tsx`) — 6 service cards
+4. **Gallery** (`app/gallery/page.tsx`) — Filterable photo grid (46 photos)
+5. **Contact** (`app/contact/page.tsx`) — Contact info + Formspree form
 
-## Workflow
-1. Client info and content lives in `PROJECT_BRIEF.md`
-2. Design and generate UI in Google Stitch using that brief
-3. Export Stitch output into this repo
-4. Refine and customize code here
-5. Commit and push to GitHub
+## Brand Colors (Tailwind v4 — defined in app/globals.css @theme)
+- `primary` → #2B6BAD (blue — nav, buttons, headings)
+- `accent`  → #F5A623 (gold — CTAs, hover, highlights)
+- `sand`    → #C9A87C (sandy tan — backgrounds)
+- `frame`   → #7B4F2E (brown — decorative)
+- `dark`    → #111111 (footer background)
 
-## Rules for This Project
-- Always read `PROJECT_BRIEF.md` before making any design or content decisions
-- Use the exact brand colors defined in the brief — do not invent colors
-- Use the real logo file from `assets/` — never use a placeholder if the real one is available
-- Keep code clean and simple — this is a marketing site, not an app
-- Mobile-first: every page must look good on phone screens
-- No unnecessary JavaScript — prefer CSS for animations and layout
+## Fonts
+- Headings: Montserrat (`font-heading`) — via next/font/google
+- Body: Inter (`font-body`) — via next/font/google
 
-## What NOT to Do
-- Do not add features not listed in the brief
-- Do not use frameworks (React, Next.js, etc.) unless explicitly asked — Stitch output is plain HTML/CSS/JS
-- Do not commit `node_modules` or any build artifacts
+## Contact Form
+Formspree — replace `YOUR_FORM_ID` in `components/contact/ContactForm.tsx` with the real ID from formspree.io.
+
+## Rules
+- Always read `PROJECT_BRIEF.md` before making design or content decisions
+- Use brand colors defined above — never invent new ones
+- Mobile-first: every page must look good at 375px
+- Keep components small and focused — one job per component
+- Animations use Framer Motion `whileInView` with `viewport={{ once: true }}`
+- Client components need `"use client"` — only add when required (state, effects, animations)
+- Image paths in `public/` must be URL-encoded when filenames have spaces or parens

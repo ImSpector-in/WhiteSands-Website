@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors */
+  --color-primary: #2B6BAD;
+  --color-accent:  #F5A623;
+  --color-sand:    #C9A87C;
+  --color-frame:   #7B4F2E;
+  --color-dark:    #111111;
+
+  /* Fonts — variables injected by next/font in layout.tsx */
+  --font-heading: var(--font-montserrat), 'Montserrat', sans-serif;
+  --font-body:    var(--font-inter), 'Inter', sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
