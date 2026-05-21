@@ -1,0 +1,36 @@
+/* White Sands — Global Styles */
+/* Stitch-generated styles go in their own files. This file holds shared resets and variables only. */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Brand colors — fill these in once PROJECT_BRIEF.md is complete */
+  --color-primary: #000000;
+  --color-secondary: #000000;
+  --color-background: #ffffff;
+  --color-text: #111111;
+
+  /* Typography */
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
