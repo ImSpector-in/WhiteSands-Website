@@ -49,7 +49,7 @@ export default function ContactPage() {
       <PageHero
         title="Contact Us"
         subtitle="Let's talk about your next project"
-        bgImage="/assets/images/Sheraton%20Coffee%20Shop/1.jpg"
+        bgImage="/assets/images/new%20pictures/KohalaSide.jpg"
       />
 
       <section className="py-24">

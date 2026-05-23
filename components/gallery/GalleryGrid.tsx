@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Category = "all" | "hotels" | "restaurants" | "spa";
 
@@ -14,32 +15,27 @@ interface GalleryItem {
 }
 
 const items: GalleryItem[] = [
-  // Hotels & Resorts — Fairmont Orchid
-  ...["1","8","10","11","12","13","14"].map((n) => ({
-    src:      `/assets/images/Fairmont%20Orchid%20540%20Room%20Remodel/${n}.jpg`,
-    alt:      "Fairmont Orchid 540 Room Remodel",
-    name:     "Fairmont Orchid — 540 Room Remodel",
-    category: "hotels" as Category,
-    cat:      "Hotels & Resorts",
-  })),
-  // Hotels & Resorts — Hawaii Prince Waikiki
-  ...["1","2","3","4","5","6","7"].map((n) => ({
-    src:      `/assets/images/Hawaii%20Prince%20Waikiki/${n}.jpg`,
-    alt:      "Hawaii Prince Waikiki",
-    name:     "Hawaii Prince Waikiki",
-    category: "hotels" as Category,
-    cat:      "Hotels & Resorts",
-  })),
-  // Hotels & Resorts — Mauna Kea Beach
-  { src: "/assets/images/Mauna%20Kea%20Beach/1%20%281%29.jpg", alt: "Mauna Kea Beach Hotel", name: "Mauna Kea Beach Hotel", category: "hotels", cat: "Hotels & Resorts" },
-  ...["2","3","4","5","6","7"].map((n) => ({
-    src:      `/assets/images/Mauna%20Kea%20Beach/${n}.jpg`,
-    alt:      "Mauna Kea Beach Hotel",
-    name:     "Mauna Kea Beach Hotel",
-    category: "hotels" as Category,
-    cat:      "Hotels & Resorts",
-  })),
-  // Hotels & Resorts — Mauna Kea Front Tower
+  // ── HIGH-RES NEW PHOTOS — top of grid ────────────────────────────────────
+  { src: "/assets/images/new%20pictures/KohalaSide.jpg",                         alt: "Kohala Coast",              name: "Kohala Coast Resort",          category: "hotels",      cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/MaunaKea1.jpg",                          alt: "Mauna Kea Beach Hotel",     name: "Mauna Kea Beach Hotel",        category: "hotels",      cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/MaunaKea2.jpg",                          alt: "Mauna Kea Beach Hotel",     name: "Mauna Kea Beach Hotel",        category: "hotels",      cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Kaunaoa.jpg",                            alt: "Kaunaoa",                   name: "Kaunaoa",                      category: "hotels",      cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20Ballroom%201.jpg", alt: "Prince Waikiki Ballroom", name: "Prince Waikiki — Ballroom",    category: "hotels",      cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Boardroom.jpg",                          alt: "Boardroom",                 name: "Boardroom",                    category: "hotels",      cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Sexton.jpg",                             alt: "Sexton",                    name: "Sexton",                       category: "hotels",      cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Manta%20Lounge.jpg",                     alt: "Manta Lounge",              name: "Manta Lounge",                 category: "restaurants", cat: "Restaurants" },
+  { src: "/assets/images/new%20pictures/MantaPDR.jpg",                           alt: "Manta Private Dining",      name: "Manta — Private Dining Room",  category: "restaurants", cat: "Restaurants" },
+  { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%201.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
+  { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%202.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
+  { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%203.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
+  { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%204.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
+  { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%205.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
+
+  // ── HOTELS & RESORTS — existing ──────────────────────────────────────────
+  // Hawaii Prince Waikiki — unique scenes not covered by new photos (100 Sails bar/dining removed as duplicates)
+  { src: "/assets/images/Hawaii%20Prince%20Waikiki/5.jpg", alt: "Hawaii Prince Waikiki", name: "Hawaii Prince Waikiki", category: "hotels", cat: "Hotels & Resorts" },
+  { src: "/assets/images/Hawaii%20Prince%20Waikiki/6.jpg", alt: "Hawaii Prince Waikiki", name: "Hawaii Prince Waikiki", category: "hotels", cat: "Hotels & Resorts" },
+  { src: "/assets/images/Hawaii%20Prince%20Waikiki/7.jpg", alt: "Hawaii Prince Waikiki", name: "Hawaii Prince Waikiki", category: "hotels", cat: "Hotels & Resorts" },
   ...["1","2"].map((n) => ({
     src:      `/assets/images/Mauna%20Kea%20Beach%20Front%20Tower%20101%20Room%20Remodel/${n}.jpg`,
     alt:      "Mauna Kea Beach Front Tower 101 Room Remodel",
@@ -47,7 +43,16 @@ const items: GalleryItem[] = [
     category: "hotels" as Category,
     cat:      "Hotels & Resorts",
   })),
-  // Spa & Wellness — Mauna Lani SPA
+  // Fairmont Orchid — skip low-res /1.jpg and duplicate /13.jpg (same room as /10.jpg)
+  ...["8","10","11","12","14"].map((n) => ({
+    src:      `/assets/images/Fairmont%20Orchid%20540%20Room%20Remodel/${n}.jpg`,
+    alt:      "Fairmont Orchid 540 Room Remodel",
+    name:     "Fairmont Orchid — 540 Room Remodel",
+    category: "hotels" as Category,
+    cat:      "Hotels & Resorts",
+  })),
+
+  // ── SPA & WELLNESS ───────────────────────────────────────────────────────
   { src: "/assets/images/Mauna%20Lani%20SPA/1%20%281%29.jpg", alt: "Mauna Lani Spa", name: "Mauna Lani Spa", category: "spa", cat: "Spa & Wellness" },
   ...["2","3","4","5"].map((n) => ({
     src:      `/assets/images/Mauna%20Lani%20SPA/${n}.jpg`,
@@ -56,7 +61,8 @@ const items: GalleryItem[] = [
     category: "spa" as Category,
     cat:      "Spa & Wellness",
   })),
-  // Restaurants — Ruth's Chris Mauna Lani
+
+  // ── RESTAURANTS — existing ───────────────────────────────────────────────
   ...["1","2","3","4","5","6"].map((n) => ({
     src:      `/assets/images/Ruth%27s%20Chris%20Mauna%20Lani/${n}.jpg`,
     alt:      "Ruth's Chris Mauna Lani",
@@ -64,7 +70,6 @@ const items: GalleryItem[] = [
     category: "restaurants" as Category,
     cat:      "Restaurants",
   })),
-  // Restaurants — Ruth's Chris Waikiki
   { src: "/assets/images/Ruth%27s%20Chris%20Waikiki/1%20%281%29.jpg", alt: "Ruth's Chris Waikiki", name: "Ruth's Chris — Waikiki", category: "restaurants", cat: "Restaurants" },
   ...["2","3","4","5","6"].map((n) => ({
     src:      `/assets/images/Ruth%27s%20Chris%20Waikiki/${n}.jpg`,
@@ -73,7 +78,6 @@ const items: GalleryItem[] = [
     category: "restaurants" as Category,
     cat:      "Restaurants",
   })),
-  // Restaurants — Sheraton Coffee Shop
   ...["1","2","3","4","5","6"].map((n) => ({
     src:      `/assets/images/Sheraton%20Coffee%20Shop/${n}.jpg`,
     alt:      "Sheraton Coffee Shop",
@@ -84,16 +88,47 @@ const items: GalleryItem[] = [
 ];
 
 const filters: { label: string; value: Category }[] = [
-  { label: "All Projects",    value: "all" },
+  { label: "All Projects",     value: "all" },
   { label: "Hotels & Resorts", value: "hotels" },
-  { label: "Restaurants",     value: "restaurants" },
-  { label: "Spa & Wellness",  value: "spa" },
+  { label: "Restaurants",      value: "restaurants" },
+  { label: "Spa & Wellness",   value: "spa" },
 ];
 
 export default function GalleryGrid() {
-  const [active, setActive] = useState<Category>("all");
+  const [active, setActive]               = useState<Category>("all");
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const visible = active === "all" ? items : items.filter((i) => i.category === active);
+  const selectedItem = selectedIndex !== null ? visible[selectedIndex] : null;
+
+  const closeLightbox = () => setSelectedIndex(null);
+
+  const goPrev = useCallback(() => {
+    setSelectedIndex((prev) =>
+      prev !== null ? (prev > 0 ? prev - 1 : visible.length - 1) : null
+    );
+  }, [visible.length]);
+
+  const goNext = useCallback(() => {
+    setSelectedIndex((prev) =>
+      prev !== null ? (prev < visible.length - 1 ? prev + 1 : 0) : null
+    );
+  }, [visible.length]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (selectedIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape")      closeLightbox();
+      if (e.key === "ArrowLeft")   goPrev();
+      if (e.key === "ArrowRight")  goNext();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedIndex, goPrev, goNext]);
+
+  // Close lightbox when filter changes
+  useEffect(() => { setSelectedIndex(null); }, [active]);
 
   return (
     <div>
@@ -115,10 +150,7 @@ export default function GalleryGrid() {
       </div>
 
       {/* Grid */}
-      <motion.div
-        layout
-        className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
-      >
+      <motion.div layout className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         <AnimatePresence mode="popLayout">
           {visible.map((item, i) => (
             <motion.div
@@ -128,7 +160,8 @@ export default function GalleryGrid() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3, delay: i * 0.02 }}
-              className="group relative aspect-[4/3] overflow-hidden rounded-sm"
+              className="group relative aspect-[4/3] overflow-hidden rounded-sm cursor-pointer"
+              onClick={() => setSelectedIndex(i)}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -138,17 +171,85 @@ export default function GalleryGrid() {
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-107"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col justify-end p-4">
-                <p className="font-heading font-bold text-xs uppercase tracking-wide text-white">
-                  {item.name}
-                </p>
-                <p className="text-accent text-[0.68rem] uppercase tracking-widest mt-1">
-                  {item.cat}
-                </p>
+                <p className="font-heading font-bold text-xs uppercase tracking-wide text-white">{item.name}</p>
+                <p className="text-accent text-[0.68rem] uppercase tracking-widest mt-1">{item.cat}</p>
               </div>
             </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/92"
+            onClick={closeLightbox}
+          >
+            {/* Close */}
+            <button
+              onClick={closeLightbox}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Prev */}
+            {selectedIndex! > 0 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); goPrev(); }}
+                className="absolute left-4 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition-colors"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+            )}
+
+            {/* Next */}
+            {selectedIndex! < visible.length - 1 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); goNext(); }}
+                className="absolute right-4 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition-colors"
+                aria-label="Next image"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            )}
+
+            {/* Image container */}
+            <motion.div
+              key={selectedIndex}
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="relative mx-20 max-w-5xl w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={selectedItem.src}
+                alt={selectedItem.alt}
+                className="w-full max-h-[82vh] object-contain rounded-lg"
+              />
+              <div className="absolute bottom-0 left-0 right-0 rounded-b-lg px-5 py-4 bg-gradient-to-t from-black/80 to-transparent">
+                <p className="font-heading font-bold text-sm uppercase tracking-wide text-white">{selectedItem.name}</p>
+                <p className="text-accent text-[0.68rem] uppercase tracking-widest mt-1">{selectedItem.cat}</p>
+              </div>
+            </motion.div>
+
+            {/* Counter */}
+            <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/50 text-xs tabular-nums">
+              {selectedIndex! + 1} / {visible.length}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
