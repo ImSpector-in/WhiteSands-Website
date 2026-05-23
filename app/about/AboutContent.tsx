@@ -69,8 +69,8 @@ export default function AboutContent() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/images/Hawaii%20Prince%20Waikiki/4.jpg"
-              alt="Hawaii Prince Waikiki project by White Sands Construction"
+              src="/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%204.jpg"
+              alt="Prince Waikiki 100 Sails project by White Sands Construction"
               className="w-full h-full object-cover"
               loading="lazy"
             />

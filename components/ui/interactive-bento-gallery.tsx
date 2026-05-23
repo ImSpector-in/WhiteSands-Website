@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface MediaItemType {
   id: number;
@@ -132,6 +132,9 @@ const GalleryModal = ({
   mediaItems,
 }: GalleryModalProps) => {
   const [dockPosition, setDockPosition] = useState({ x: 0, y: 0 });
+  const currentIndex = mediaItems.findIndex((item) => item.id === selectedItem.id);
+  const prevItem = currentIndex > 0 ? mediaItems[currentIndex - 1] : null;
+  const nextItem = currentIndex < mediaItems.length - 1 ? mediaItems[currentIndex + 1] : null;
 
   if (!isOpen) return null;
 
@@ -146,7 +149,7 @@ const GalleryModal = ({
                    rounded-none sm:rounded-lg md:rounded-xl overflow-hidden z-[100]"
       >
         <div className="h-full flex flex-col">
-          <div className="flex-1 p-2 sm:p-3 md:p-4 flex items-center justify-center bg-gray-50/50">
+          <div className="flex-1 p-2 sm:p-3 md:p-4 flex items-center justify-center bg-gray-50/50" onClick={onClose}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={selectedItem.id}
@@ -159,12 +162,11 @@ const GalleryModal = ({
                   transition: { type: "spring", stiffness: 500, damping: 30, mass: 0.5 },
                 }}
                 exit={{ y: 20, scale: 0.97, transition: { duration: 0.15 } }}
-                onClick={onClose}
+                onClick={(e) => e.stopPropagation()}
               >
                 <MediaItem
                   item={selectedItem}
                   className="w-full h-full object-contain bg-gray-900/20"
-                  onClick={onClose}
                 />
                 <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-4 bg-gradient-to-t from-black/60 to-transparent">
                   <h3 className="text-white text-base sm:text-lg md:text-xl font-semibold">
@@ -177,15 +179,48 @@ const GalleryModal = ({
           </div>
         </div>
 
+        {prevItem && (
+          <motion.button
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10
+                       w-11 h-11 rounded-full bg-black/40 text-white
+                       flex items-center justify-center hover:bg-black/70
+                       backdrop-blur-sm cursor-pointer shadow-lg"
+            onClick={() => setSelectedItem(prevItem)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </motion.button>
+        )}
+
+        {nextItem && (
+          <motion.button
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10
+                       w-11 h-11 rounded-full bg-black/40 text-white
+                       flex items-center justify-center hover:bg-black/70
+                       backdrop-blur-sm cursor-pointer shadow-lg"
+            onClick={() => setSelectedItem(nextItem)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </motion.button>
+        )}
+
         <motion.button
-          className="absolute top-2 sm:top-2.5 md:top-3 right-2 sm:right-2.5 md:right-3
-                     p-2 rounded-full bg-gray-200/80 text-gray-700 hover:bg-gray-300/80
-                     text-xs sm:text-sm backdrop-blur-sm cursor-pointer"
+          className="absolute top-24 left-4 z-10
+                     flex items-center gap-2 px-4 py-2.5 rounded-full
+                     bg-black/70 text-white hover:bg-black/90
+                     backdrop-blur-sm cursor-pointer text-sm font-semibold shadow-lg"
           onClick={onClose}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Back to gallery"
         >
-          <X className="w-3 h-3" />
+          <ArrowLeft className="w-4 h-4" />
+          Back
         </motion.button>
       </motion.div>
 

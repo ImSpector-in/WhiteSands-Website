@@ -47,7 +47,7 @@ export default function ServicesPage() {
       <PageHero
         title="Our Services"
         subtitle="Full-service general contracting across the Hawaiian Islands"
-        bgImage="/assets/images/Hawaii%20Prince%20Waikiki/3.jpg"
+        bgImage="/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%203.jpg"
       />
 
       <section className="py-24">

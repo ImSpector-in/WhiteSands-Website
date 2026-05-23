@@ -16,7 +16,7 @@ export default function AboutPage() {
       <PageHero
         title="About Us"
         subtitle="Building Hawaii's finest properties since 1988"
-        bgImage="/assets/images/Mauna%20Kea%20Beach/5.jpg"
+        bgImage="/assets/images/new%20pictures/MaunaKea1.jpg"
       />
       <AboutContent />
       <StatsBar />

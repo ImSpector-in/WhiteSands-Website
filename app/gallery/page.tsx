@@ -15,7 +15,7 @@ export default function GalleryPage() {
       <PageHero
         title="Our Work"
         subtitle="Projects across Hawaii's finest hotels, restaurants, and residences"
-        bgImage="/assets/images/Fairmont%20Orchid%20540%20Room%20Remodel/12.jpg"
+        bgImage="/assets/images/new%20pictures/MaunaKea2.jpg"
       />
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-6">

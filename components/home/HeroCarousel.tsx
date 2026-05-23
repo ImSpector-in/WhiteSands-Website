@@ -7,19 +7,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
-    src:     "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=90",
-    alt:     "Luxury custom home exterior",
-    tagline: "Custom Home Building",
-  },
-  {
-    src:     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=90",
-    alt:     "Modern home interior",
-    tagline: "Fine Craftsmanship",
-  },
-  {
-    src:     "https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=1920&q=90",
-    alt:     "Luxury hotel resort",
+    src:     "/assets/images/new%20pictures/KohalaSide.jpg",
+    alt:     "Kohala Coast resort project",
     tagline: "Resort & Commercial Work",
+  },
+  {
+    src:     "/assets/images/new%20pictures/Kaunaoa.jpg",
+    alt:     "Kaunaoa Bay — Mauna Kea",
+    tagline: "Hawaii's Premier General Contractor",
+  },
+  {
+    src:     "/assets/images/new%20pictures/MaunaKea1.jpg",
+    alt:     "Mauna Kea Beach Hotel",
+    tagline: "Fine Craftsmanship Since 1988",
   },
 ];
 
