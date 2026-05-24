@@ -32,28 +32,30 @@ const MediaItem = ({
       },
       { root: null, rootMargin: "50px", threshold: 0.1 }
     );
-    if (videoRef.current) observer.observe(videoRef.current);
+    const el = videoRef.current;
+    if (el) observer.observe(el);
     return () => {
-      if (videoRef.current) observer.unobserve(videoRef.current);
+      if (el) observer.unobserve(el);
     };
   }, []);
 
   useEffect(() => {
     let mounted = true;
+    const videoEl = videoRef.current;
     const handleVideoPlay = async () => {
-      if (!videoRef.current || !isInView || !mounted) return;
+      if (!videoEl || !isInView || !mounted) return;
       try {
-        if (videoRef.current.readyState >= 3) {
+        if (videoEl.readyState >= 3) {
           setIsBuffering(false);
-          await videoRef.current.play();
+          await videoEl.play();
         } else {
           setIsBuffering(true);
           await new Promise((resolve) => {
-            if (videoRef.current) videoRef.current.oncanplay = resolve;
+            if (videoEl) videoEl.oncanplay = resolve;
           });
           if (mounted) {
             setIsBuffering(false);
-            await videoRef.current.play();
+            await videoEl.play();
           }
         }
       } catch (error) {
@@ -62,15 +64,15 @@ const MediaItem = ({
     };
     if (isInView) {
       handleVideoPlay();
-    } else if (videoRef.current) {
-      videoRef.current.pause();
+    } else if (videoEl) {
+      videoEl.pause();
     }
     return () => {
       mounted = false;
-      if (videoRef.current) {
-        videoRef.current.pause();
-        videoRef.current.removeAttribute("src");
-        videoRef.current.load();
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.removeAttribute("src");
+        videoEl.load();
       }
     };
   }, [isInView]);

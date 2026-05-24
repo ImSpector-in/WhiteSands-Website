@@ -1,6 +1,5 @@
 "use client";
 
-import { Metadata } from "next";
 import PageHero  from "@/components/PageHero";
 import CtaBanner from "@/components/CtaBanner";
 import { motion } from "framer-motion";
@@ -39,8 +38,6 @@ const services = [
   },
 ];
 
-// Services page uses client component for animations
-// Metadata is exported from a separate server segment if needed — for now page is client
 export default function ServicesPage() {
   return (
     <>

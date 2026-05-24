@@ -168,7 +168,7 @@ export default function GalleryGrid() {
                 src={item.src}
                 alt={item.alt}
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-107"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.07]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col justify-end p-4">
                 <p className="font-heading font-bold text-xs uppercase tracking-wide text-white">{item.name}</p>
@@ -228,7 +228,7 @@ export default function GalleryGrid() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.96, opacity: 0 }}
               transition={{ duration: 0.18 }}
-              className="relative mx-20 max-w-5xl w-full"
+              className="relative mx-4 sm:mx-12 lg:mx-20 max-w-5xl w-full"
               onClick={(e) => e.stopPropagation()}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
