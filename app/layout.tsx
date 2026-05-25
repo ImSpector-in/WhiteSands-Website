@@ -32,7 +32,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen flex flex-col font-body antialiased">
         <Nav />
-        <main className="flex-1 pt-20">{children}</main>
+        <main className="flex-1 pt-24">{children}</main>
         <Footer />
       </body>
     </html>

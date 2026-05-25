@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero is pinned — content scrolls over it */}
-      <div className="sticky top-0 z-0 -mt-20">
+      <div className="sticky top-0 z-0 -mt-24">
         <HeroCarousel />
       </div>
 

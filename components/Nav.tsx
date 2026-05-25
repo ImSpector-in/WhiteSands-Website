@@ -36,17 +36,17 @@ export default function Nav() {
         scrolled ? "shadow-md" : "border-b border-gray-100"
       }`}
     >
-      <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 h-24 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 shrink-0">
           <Image
             src="/assets/logo/WhiteSandsLogo_clear.gif"
             alt="White Sands Construction"
-            width={84}
-            height={84}
+            width={96}
+            height={96}
             unoptimized
           />
-          <span className="font-heading font-black text-sm uppercase tracking-widest text-primary leading-tight">
+          <span className="font-heading font-black text-base uppercase tracking-widest text-primary leading-tight">
             White Sands<br />Construction
           </span>
         </Link>

@@ -212,7 +212,7 @@ const GalleryModal = ({
         )}
 
         <motion.button
-          className="absolute top-24 left-4 z-10
+          className="absolute top-28 left-4 z-10
                      flex items-center gap-2 px-4 py-2.5 rounded-full
                      bg-black/70 text-white hover:bg-black/90
                      backdrop-blur-sm cursor-pointer text-sm font-semibold shadow-lg"
