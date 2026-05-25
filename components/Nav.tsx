@@ -42,11 +42,11 @@ export default function Nav() {
           <Image
             src="/assets/logo/WhiteSandsLogo_clear.gif"
             alt="White Sands Construction"
-            width={72}
-            height={72}
+            width={84}
+            height={84}
             unoptimized
           />
-          <span className="font-heading font-black text-xs uppercase tracking-widest text-primary leading-tight">
+          <span className="font-heading font-black text-sm uppercase tracking-widest text-primary leading-tight">
             White Sands<br />Construction
           </span>
         </Link>
