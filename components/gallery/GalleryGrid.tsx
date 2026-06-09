@@ -91,9 +91,9 @@ const items: GalleryItem[] = [
   })),
 
   // ── RETAIL & COMMERCIAL ──────────────────────────────────────────────────
-  { src: "/assets/images/new%20pictures/Lululemon.jpg",                      alt: "Kings' Shops Common Area — Lululemon Storefront", name: "Kings' Shops Common Area — Lululemon Storefront", category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg", alt: "Kings' Shops Common Area — Before",               name: "Kings' Shops Common Area — Before",               category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",              alt: "Kings' Shops Common Area — After",                name: "Kings' Shops Common Area — After",                category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg", alt: "Kings' Shops Common Area — Before",                       name: "Kings' Shops Common Area — Before",                       category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Lululemon.jpg",                      alt: "Kings' Shops Common Area — After (Lululemon)",            name: "Kings' Shops Common Area — After (Lululemon)",            category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",              alt: "Kings' Shops Common Area — After (Outdoor Seating)",      name: "Kings' Shops Common Area — After (Outdoor Seating)",      category: "retail", cat: "Retail & Commercial" },
   { src: "/assets/images/new%20pictures/Restroom.jpg",                       alt: "Kings' Shops — Restroom Renovation",              name: "Kings' Shops — Restroom Renovation",              category: "retail", cat: "Retail & Commercial" },
   { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",             alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
 ];
