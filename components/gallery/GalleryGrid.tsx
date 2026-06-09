@@ -55,6 +55,8 @@ const items: GalleryItem[] = [
   { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge%20Food%20Display.jpg", alt: "Fairmont Orchid — Gold Lounge Food Display", name: "Fairmont Orchid — Gold Lounge Food Display", category: "hotels", cat: "Hotels & Resorts" },
 
   // ── SPA & WELLNESS ───────────────────────────────────────────────────────
+  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Salon Treatment Area", name: "Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Salon Lobby",          name: "Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
   { src: "/assets/images/Mauna%20Lani%20SPA/1%20%281%29.jpg", alt: "Mauna Lani Spa", name: "Mauna Lani Spa", category: "spa", cat: "Spa & Wellness" },
   ...["2","3","4","5"].map((n) => ({
     src:      `/assets/images/Mauna%20Lani%20SPA/${n}.jpg`,
@@ -63,8 +65,6 @@ const items: GalleryItem[] = [
     category: "spa" as Category,
     cat:      "Spa & Wellness",
   })),
-  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Salon Treatment Area", name: "Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
-  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Salon Lobby",          name: "Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
 
   // ── RESTAURANTS — existing ───────────────────────────────────────────────
   ...["1","2","3","4","5","6"].map((n) => ({
