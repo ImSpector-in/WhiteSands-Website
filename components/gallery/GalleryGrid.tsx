@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
-type Category = "all" | "hotels" | "restaurants" | "spa";
+type Category = "all" | "hotels" | "restaurants" | "spa" | "retail";
 
 interface GalleryItem {
   src:      string;
@@ -16,6 +16,13 @@ interface GalleryItem {
 
 const items: GalleryItem[] = [
   // ── HIGH-RES NEW PHOTOS — top of grid ────────────────────────────────────
+  { src: "/assets/images/new%20pictures/Lululemon.jpg",                          alt: "Kings' Shops Common Area — Lululemon Storefront", name: "Kings' Shops Common Area — Lululemon Storefront", category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg",     alt: "Kings' Shops Common Area — Before",               name: "Kings' Shops Common Area — Before",               category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",                  alt: "Kings' Shops Common Area — After",                name: "Kings' Shops Common Area — After",                category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Restroom.jpg",                           alt: "Kings' Shops — Restroom Renovation",              name: "Kings' Shops — Restroom Renovation",              category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",                 alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg",           alt: "Salon Treatment Area",             name: "Salon — Treatment Area",              category: "spa",    cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",                      alt: "Salon Lobby",                      name: "Salon — Reception Lobby",             category: "spa",    cat: "Spa & Wellness" },
   { src: "/assets/images/new%20pictures/KohalaSide.jpg",                         alt: "Kohala Coast",              name: "Kohala Coast Resort",          category: "hotels",      cat: "Hotels & Resorts" },
   { src: "/assets/images/new%20pictures/MaunaKea1.jpg",                          alt: "Mauna Kea Beach Hotel",     name: "Mauna Kea Beach Hotel",        category: "hotels",      cat: "Hotels & Resorts" },
   { src: "/assets/images/new%20pictures/MaunaKea2.jpg",                          alt: "Mauna Kea Beach Hotel",     name: "Mauna Kea Beach Hotel",        category: "hotels",      cat: "Hotels & Resorts" },
@@ -51,6 +58,8 @@ const items: GalleryItem[] = [
     category: "hotels" as Category,
     cat:      "Hotels & Resorts",
   })),
+  { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge.jpg",              alt: "Fairmont Orchid — Gold Lounge",              name: "Fairmont Orchid — Gold Lounge",              category: "hotels", cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge%20Food%20Display.jpg", alt: "Fairmont Orchid — Gold Lounge Food Display", name: "Fairmont Orchid — Gold Lounge Food Display", category: "hotels", cat: "Hotels & Resorts" },
 
   // ── SPA & WELLNESS ───────────────────────────────────────────────────────
   { src: "/assets/images/Mauna%20Lani%20SPA/1%20%281%29.jpg", alt: "Mauna Lani Spa", name: "Mauna Lani Spa", category: "spa", cat: "Spa & Wellness" },
@@ -88,10 +97,11 @@ const items: GalleryItem[] = [
 ];
 
 const filters: { label: string; value: Category }[] = [
-  { label: "All Projects",     value: "all" },
-  { label: "Hotels & Resorts", value: "hotels" },
-  { label: "Restaurants",      value: "restaurants" },
-  { label: "Spa & Wellness",   value: "spa" },
+  { label: "All Projects",        value: "all" },
+  { label: "Hotels & Resorts",    value: "hotels" },
+  { label: "Restaurants",         value: "restaurants" },
+  { label: "Spa & Wellness",      value: "spa" },
+  { label: "Retail & Commercial", value: "retail" },
 ];
 
 export default function GalleryGrid() {
