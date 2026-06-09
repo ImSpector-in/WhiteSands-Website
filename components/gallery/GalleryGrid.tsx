@@ -16,13 +16,6 @@ interface GalleryItem {
 
 const items: GalleryItem[] = [
   // ── HIGH-RES NEW PHOTOS — top of grid ────────────────────────────────────
-  { src: "/assets/images/new%20pictures/Lululemon.jpg",                          alt: "Kings' Shops Common Area — Lululemon Storefront", name: "Kings' Shops Common Area — Lululemon Storefront", category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg",     alt: "Kings' Shops Common Area — Before",               name: "Kings' Shops Common Area — Before",               category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",                  alt: "Kings' Shops Common Area — After",                name: "Kings' Shops Common Area — After",                category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Restroom.jpg",                           alt: "Kings' Shops — Restroom Renovation",              name: "Kings' Shops — Restroom Renovation",              category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",                 alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg",           alt: "Salon Treatment Area",             name: "Salon — Treatment Area",              category: "spa",    cat: "Spa & Wellness" },
-  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",                      alt: "Salon Lobby",                      name: "Salon — Reception Lobby",             category: "spa",    cat: "Spa & Wellness" },
   { src: "/assets/images/new%20pictures/KohalaSide.jpg",                         alt: "Kohala Coast",              name: "Kohala Coast Resort",          category: "hotels",      cat: "Hotels & Resorts" },
   { src: "/assets/images/new%20pictures/MaunaKea1.jpg",                          alt: "Mauna Kea Beach Hotel",     name: "Mauna Kea Beach Hotel",        category: "hotels",      cat: "Hotels & Resorts" },
   { src: "/assets/images/new%20pictures/MaunaKea2.jpg",                          alt: "Mauna Kea Beach Hotel",     name: "Mauna Kea Beach Hotel",        category: "hotels",      cat: "Hotels & Resorts" },
@@ -70,6 +63,8 @@ const items: GalleryItem[] = [
     category: "spa" as Category,
     cat:      "Spa & Wellness",
   })),
+  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Salon Treatment Area", name: "Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Salon Lobby",          name: "Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
 
   // ── RESTAURANTS — existing ───────────────────────────────────────────────
   ...["1","2","3","4","5","6"].map((n) => ({
@@ -94,6 +89,13 @@ const items: GalleryItem[] = [
     category: "restaurants" as Category,
     cat:      "Restaurants",
   })),
+
+  // ── RETAIL & COMMERCIAL ──────────────────────────────────────────────────
+  { src: "/assets/images/new%20pictures/Lululemon.jpg",                      alt: "Kings' Shops Common Area — Lululemon Storefront", name: "Kings' Shops Common Area — Lululemon Storefront", category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg", alt: "Kings' Shops Common Area — Before",               name: "Kings' Shops Common Area — Before",               category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",              alt: "Kings' Shops Common Area — After",                name: "Kings' Shops Common Area — After",                category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Restroom.jpg",                       alt: "Kings' Shops — Restroom Renovation",              name: "Kings' Shops — Restroom Renovation",              category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",             alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
 ];
 
 const filters: { label: string; value: Category }[] = [
