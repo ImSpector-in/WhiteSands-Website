@@ -31,6 +31,17 @@ const items: GalleryItem[] = [
   { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%204.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
   { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%205.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
 
+  // ── ADDED 6/9 — NEW HOTEL, SPA & RETAIL PHOTOS ───────────────────────────
+  { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge.jpg",              alt: "Fairmont Orchid — Gold Lounge",              name: "Fairmont Orchid — Gold Lounge",              category: "hotels", cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge%20Food%20Display.jpg", alt: "Fairmont Orchid — Gold Lounge Food Display", name: "Fairmont Orchid — Gold Lounge Food Display", category: "hotels", cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Mauna Kea Salon Treatment Area", name: "Mauna Kea Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Mauna Kea Salon Lobby",          name: "Mauna Kea Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg", alt: "Kings' Shops Common Area — Before",                       name: "Kings' Shops Common Area — Before",                       category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",              alt: "Kings' Shops Common Area — After (Outdoor Seating)",      name: "Kings' Shops Common Area — After (Outdoor Seating)",      category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Lululemon.jpg",                      alt: "Kings' Shops Common Area — After (Lululemon)",            name: "Kings' Shops Common Area — After (Lululemon)",            category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Restroom.jpg",                       alt: "Kings' Shops — Restroom Renovation",              name: "Kings' Shops — Restroom Renovation",              category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",             alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
+
   // ── HOTELS & RESORTS — existing ──────────────────────────────────────────
   // Hawaii Prince Waikiki — unique scenes not covered by new photos (100 Sails bar/dining removed as duplicates)
   { src: "/assets/images/Hawaii%20Prince%20Waikiki/5.jpg", alt: "Hawaii Prince Waikiki", name: "Hawaii Prince Waikiki", category: "hotels", cat: "Hotels & Resorts" },
@@ -51,12 +62,8 @@ const items: GalleryItem[] = [
     category: "hotels" as Category,
     cat:      "Hotels & Resorts",
   })),
-  { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge.jpg",              alt: "Fairmont Orchid — Gold Lounge",              name: "Fairmont Orchid — Gold Lounge",              category: "hotels", cat: "Hotels & Resorts" },
-  { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge%20Food%20Display.jpg", alt: "Fairmont Orchid — Gold Lounge Food Display", name: "Fairmont Orchid — Gold Lounge Food Display", category: "hotels", cat: "Hotels & Resorts" },
 
   // ── SPA & WELLNESS ───────────────────────────────────────────────────────
-  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Mauna Kea Salon Treatment Area", name: "Mauna Kea Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
-  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Mauna Kea Salon Lobby",          name: "Mauna Kea Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
   { src: "/assets/images/Mauna%20Lani%20SPA/1%20%281%29.jpg", alt: "Mauna Lani Spa", name: "Mauna Lani Spa", category: "spa", cat: "Spa & Wellness" },
   ...["2","3","4","5"].map((n) => ({
     src:      `/assets/images/Mauna%20Lani%20SPA/${n}.jpg`,
@@ -89,13 +96,6 @@ const items: GalleryItem[] = [
     category: "restaurants" as Category,
     cat:      "Restaurants",
   })),
-
-  // ── RETAIL & COMMERCIAL ──────────────────────────────────────────────────
-  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg", alt: "Kings' Shops Common Area — Before",                       name: "Kings' Shops Common Area — Before",                       category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",              alt: "Kings' Shops Common Area — After (Outdoor Seating)",      name: "Kings' Shops Common Area — After (Outdoor Seating)",      category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Lululemon.jpg",                      alt: "Kings' Shops Common Area — After (Lululemon)",            name: "Kings' Shops Common Area — After (Lululemon)",            category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Restroom.jpg",                       alt: "Kings' Shops — Restroom Renovation",              name: "Kings' Shops — Restroom Renovation",              category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",             alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
 ];
 
 const filters: { label: string; value: Category }[] = [
