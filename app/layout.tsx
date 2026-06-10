@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${inter.variable} scroll-smooth`}
+      className={`${montserrat.variable} ${inter.variable}`}
     >
       <body className="min-h-screen flex flex-col font-body antialiased">
         <Nav />
