@@ -1,9 +1,17 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+// Pre-generated responsive WebP variants (scripts/generate-hero-webp.js) at
+// 640/1024/1920px, served via <picture> with a JPEG fallback — works on any
+// static host (no server-side image optimizer needed).
+const WEBP_WIDTHS = [640, 1024, 1920];
+function webpSrcSet(jpgSrc: string) {
+  const base = jpgSrc.replace(/\.jpg$/, "");
+  return WEBP_WIDTHS.map((w) => `${base}-${w}.webp ${w}w`).join(", ");
+}
 
 const slides = [
   {
@@ -42,16 +50,16 @@ export default function HeroCarousel() {
     <section className="relative h-screen min-h-[620px] overflow-hidden" aria-label="Hero slideshow">
       {/* Preload all slides so transitions don't flicker */}
       {slides.map((slide, i) => (
-        <div key={slide.src} className="absolute inset-0" aria-hidden>
-          <Image
+        <picture key={slide.src} className="absolute inset-0 block" aria-hidden>
+          <source type="image/webp" srcSet={webpSrcSet(slide.src)} sizes="100vw" />
+          <img
             src={slide.src}
             alt=""
-            fill
-            className="object-cover"
-            priority={i === 0}
-            sizes="100vw"
+            loading="eager"
+            fetchPriority={i === 0 ? "high" : "auto"}
+            className="absolute inset-0 w-full h-full object-cover"
           />
-        </div>
+        </picture>
       ))}
 
       {/* Animated fade layer for transitions */}
@@ -65,14 +73,16 @@ export default function HeroCarousel() {
           transition={{ duration: 0.4 }}
           aria-label={slides[current].alt}
         >
-          <Image
-            src={slides[current].src}
-            alt={slides[current].alt}
-            fill
-            className="object-cover"
-            priority={current === 0}
-            sizes="100vw"
-          />
+          <picture className="absolute inset-0 block">
+            <source type="image/webp" srcSet={webpSrcSet(slides[current].src)} sizes="100vw" />
+            <img
+              src={slides[current].src}
+              alt={slides[current].alt}
+              loading="eager"
+              fetchPriority={current === 0 ? "high" : "auto"}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </picture>
         </motion.div>
       </AnimatePresence>
 
