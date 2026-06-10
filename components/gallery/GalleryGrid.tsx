@@ -33,7 +33,7 @@ const items: GalleryItem[] = [
 
   // ── ADDED 6/9 — NEW HOTEL, SPA & RETAIL PHOTOS ───────────────────────────
   { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge.jpg",              alt: "Fairmont Orchid — Gold Lounge",              name: "Fairmont Orchid — Gold Lounge",              category: "hotels", cat: "Hotels & Resorts" },
-  { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge%20Food%20Display.jpg", alt: "Fairmont Orchid — Gold Lounge Food Display", name: "Fairmont Orchid — Gold Lounge Food Display", category: "hotels", cat: "Hotels & Resorts" },
+  { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge%20Food%20Display.jpg", alt: "Fairmont Orchid — Gold Lounge", name: "Fairmont Orchid — Gold Lounge", category: "hotels", cat: "Hotels & Resorts" },
   { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Mauna Kea Salon Treatment Area", name: "Mauna Kea Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
   { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Mauna Kea Salon Lobby",          name: "Mauna Kea Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
   { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg", alt: "Kings' Shops Common Area — Before",                       name: "Kings' Shops Common Area — Before",                       category: "retail", cat: "Retail & Commercial" },
