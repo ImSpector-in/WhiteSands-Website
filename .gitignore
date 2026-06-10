@@ -44,3 +44,7 @@ next-env.d.ts
 
 # Local design screenshots (not committed)
 screenshots/
+
+# Claude Code project instructions (kept locally, not shipped to host)
+CLAUDE.md
+AGENTS.md
