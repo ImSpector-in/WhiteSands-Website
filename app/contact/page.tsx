@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import PageHero     from "@/components/PageHero";
 import ContactForm  from "@/components/contact/ContactForm";
+import LocationMap  from "@/components/contact/LocationMap";
 import { Phone, Mail, MapPin, Package } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -52,7 +53,7 @@ export default function ContactPage() {
         bgImage="/assets/images/new%20pictures/KohalaSide.jpg"
       />
 
-      <section className="py-24">
+      <section className="pt-24 pb-8">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Info */}
           <div>
@@ -82,6 +83,8 @@ export default function ContactPage() {
           <ContactForm />
         </div>
       </section>
+
+      <LocationMap />
     </>
   );
 }
