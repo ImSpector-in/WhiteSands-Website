@@ -145,7 +145,7 @@ export default function GalleryGrid() {
   return (
     <div>
       {/* Filter tabs */}
-      <div className="flex flex-wrap gap-2 mb-12" role="group" aria-label="Filter projects">
+      <div className="flex flex-wrap gap-2 mb-12 justify-center" role="group" aria-label="Filter projects">
         {filters.map(({ label, value }) => (
           <button
             key={value}
