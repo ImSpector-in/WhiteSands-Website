@@ -24,7 +24,7 @@ const contactInfo = [
     label: "Email",
     lines: [
       <a key="email" href="mailto:olivia@whitesandsconst.com" className="text-primary hover:underline">olivia@whitesandsconst.com</a>,
-      <span key="name" className="text-xs text-gray-400">Olivia Culp, Office Manager</span>,
+      <span key="name" className="text-xs text-gray-400">Olivia Culp, President</span>,
     ],
   },
   {

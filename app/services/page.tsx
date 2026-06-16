@@ -61,7 +61,7 @@ export default function ServicesPage() {
             </h2>
             <div className="w-14 h-1 bg-accent mb-5" />
             <p className="text-gray-500 max-w-xl leading-relaxed">
-              White Sands employs in-house painters, heavy equipment operators, concrete finishers, and journeymen carpenters — giving us the depth to handle complex projects without heavy reliance on subcontractors.
+              White Sands employs in-house painters, heavy equipment operators, concrete finishers, and journeymen carpenters — giving us the depth to handle the most complex projects. As a proud union company and signatory to the Hawaii Carpenters Union, every job is built by trained, certified craftspeople.
             </p>
           </motion.div>
 

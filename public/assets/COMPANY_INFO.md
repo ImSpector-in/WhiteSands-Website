@@ -22,7 +22,7 @@ Office Phone: (808) 880-9400
 Office Fax: (808) 880-9600
 
 E-Mail:
-Olivia Culp - Office Manager: olivia @ whitesandsconst . com
+Olivia Culp - President: olivia @ whitesandsconst . com
 Location	We are located at:
 
 61-3270 Maluokalani Street

@@ -46,8 +46,8 @@ export default function Nav() {
             height={96}
             unoptimized
           />
-          <span className="font-heading font-black text-base uppercase tracking-widest text-primary leading-tight">
-            White Sands<br />Construction
+          <span className="font-heading font-black text-lg uppercase tracking-widest text-primary leading-tight">
+            White Sands<br />Construction, Inc
           </span>
         </Link>
 

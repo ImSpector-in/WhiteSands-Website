@@ -20,7 +20,7 @@ export default function Footer() {
             Quality Construction Since 1988
           </p>
           <p className="text-sm text-gray-600 leading-relaxed">
-            Licensed General Contractor<br />State of Hawaii
+            Licensed General Contractor<br />State of Hawaii<br />License #BC-22710
           </p>
         </div>
 

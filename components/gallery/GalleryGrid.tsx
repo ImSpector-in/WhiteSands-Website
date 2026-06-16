@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
-type Category = "all" | "hotels" | "restaurants" | "spa" | "retail";
+type Category = "all" | "hotels" | "restaurants" | "spa" | "retail" | "healthcare";
 
 interface GalleryItem {
   src:      string;
@@ -15,7 +15,20 @@ interface GalleryItem {
 }
 
 const items: GalleryItem[] = [
-  // ── HIGH-RES NEW PHOTOS — top of grid ────────────────────────────────────
+  // ── MOST RECENT — top of grid (per client 6/15) ──────────────────────────
+  // Kings' Shops Waikoloa
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg", alt: "Kings' Shops Common Area — Before",                       name: "Kings' Shops Common Area — Before",                       category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",              alt: "Kings' Shops Common Area — After (Outdoor Seating)",      name: "Kings' Shops Common Area — After (Outdoor Seating)",      category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Lululemon.jpg",                      alt: "Kings' Shops Common Area — After (Lululemon)",            name: "Kings' Shops Common Area — After (Lululemon)",            category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",             alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
+  // Mauna Kea Salon
+  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Mauna Kea Salon Treatment Area", name: "Mauna Kea Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Mauna Kea Salon Lobby",          name: "Mauna Kea Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
+  // Hospital Oncology Department
+  { src: "/assets/images/new%20pictures/Hospital%20Oncology%201.jpg", alt: "Hospital Oncology Department", name: "Hospital Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
+  { src: "/assets/images/new%20pictures/Hospital%20Oncology%202.jpg", alt: "Hospital Oncology Department", name: "Hospital Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
+
+  // ── HIGH-RES NEW PHOTOS ───────────────────────────────────────────────────
   { src: "/assets/images/new%20pictures/KohalaSide.jpg",                         alt: "Kohala Coast",              name: "Kohala Coast Resort",          category: "hotels",      cat: "Hotels & Resorts" },
   { src: "/assets/images/new%20pictures/MaunaKea1.jpg",                          alt: "Mauna Kea Beach Hotel",     name: "Mauna Kea Beach Hotel",        category: "hotels",      cat: "Hotels & Resorts" },
   { src: "/assets/images/new%20pictures/MaunaKea2.jpg",                          alt: "Mauna Kea Beach Hotel",     name: "Mauna Kea Beach Hotel",        category: "hotels",      cat: "Hotels & Resorts" },
@@ -31,16 +44,9 @@ const items: GalleryItem[] = [
   { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%204.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
   { src: "/assets/images/new%20pictures/Prince%20Waikiki%20-%20100%20Sails%205.jpg", alt: "Prince Waikiki 100 Sails", name: "Prince Waikiki — 100 Sails", category: "restaurants", cat: "Restaurants" },
 
-  // ── ADDED 6/9 — NEW HOTEL, SPA & RETAIL PHOTOS ───────────────────────────
+  // ── ADDED 6/9 — FAIRMONT ORCHID ──────────────────────────────────────────
   { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge.jpg",              alt: "Fairmont Orchid — Gold Lounge",              name: "Fairmont Orchid — Gold Lounge",              category: "hotels", cat: "Hotels & Resorts" },
   { src: "/assets/images/new%20pictures/Fairmont%20Orchid%20-%20Gold%20Lounge%20Food%20Display.jpg", alt: "Fairmont Orchid — Gold Lounge", name: "Fairmont Orchid — Gold Lounge", category: "hotels", cat: "Hotels & Resorts" },
-  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Mauna Kea Salon Treatment Area", name: "Mauna Kea Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
-  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Mauna Kea Salon Lobby",          name: "Mauna Kea Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
-  { src: "/assets/images/new%20pictures/Outdoor%20Seating%20-%20Before.jpg", alt: "Kings' Shops Common Area — Before",                       name: "Kings' Shops Common Area — Before",                       category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",              alt: "Kings' Shops Common Area — After (Outdoor Seating)",      name: "Kings' Shops Common Area — After (Outdoor Seating)",      category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Lululemon.jpg",                      alt: "Kings' Shops Common Area — After (Lululemon)",            name: "Kings' Shops Common Area — After (Lululemon)",            category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Restroom.jpg",                       alt: "Kings' Shops — Restroom Renovation",              name: "Kings' Shops — Restroom Renovation",              category: "retail", cat: "Retail & Commercial" },
-  { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",             alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
 
   // ── HOTELS & RESORTS — existing ──────────────────────────────────────────
   // Hawaii Prince Waikiki — unique scenes not covered by new photos (100 Sails bar/dining removed as duplicates)
@@ -104,6 +110,7 @@ const filters: { label: string; value: Category }[] = [
   { label: "Restaurants",         value: "restaurants" },
   { label: "Spa & Wellness",      value: "spa" },
   { label: "Retail & Commercial", value: "retail" },
+  { label: "Healthcare",          value: "healthcare" },
 ];
 
 export default function GalleryGrid() {
