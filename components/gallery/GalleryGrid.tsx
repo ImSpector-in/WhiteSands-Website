@@ -24,9 +24,9 @@ const items: GalleryItem[] = [
   // Mauna Kea Salon
   { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Mauna Kea Salon Treatment Area", name: "Mauna Kea Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
   { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Mauna Kea Salon Lobby",          name: "Mauna Kea Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
-  // Hospital Oncology Department
-  { src: "/assets/images/new%20pictures/Hospital%20Oncology%201.jpg", alt: "Hospital Oncology Department", name: "Hospital Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
-  { src: "/assets/images/new%20pictures/Hospital%20Oncology%202.jpg", alt: "Hospital Oncology Department", name: "Hospital Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
+  // Kona Hospital Oncology Department
+  { src: "/assets/images/new%20pictures/Hospital%20Oncology%201.jpg", alt: "Kona Hospital Oncology Department", name: "Kona Hospital Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
+  { src: "/assets/images/new%20pictures/Hospital%20Oncology%202.jpg", alt: "Kona Hospital Oncology Department", name: "Kona Hospital Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
 
   // ── HIGH-RES NEW PHOTOS ───────────────────────────────────────────────────
   { src: "/assets/images/new%20pictures/KohalaSide.jpg",                         alt: "Kohala Coast",              name: "Kohala Coast Resort",          category: "hotels",      cat: "Hotels & Resorts" },
