@@ -44,9 +44,9 @@ enabled on the server.
 
 ## Contact form
 
-The contact form uses Formspree. Replace `YOUR_FORM_ID` in
-`components/contact/ContactForm.tsx` with a real form ID from
-https://formspree.io.
+The contact form submits to RSForm!Pro in Joomla. Replace `RSFORM_ID` in
+`components/contact/ContactForm.tsx` with the form's ID (Joomla admin →
+RSForm!Pro → the form). Joomla sends the email via its configured SMTP.
 
 ## Hero images
 
