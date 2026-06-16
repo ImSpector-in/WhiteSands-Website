@@ -12,7 +12,9 @@ export default function ContactForm() {
     const data = new FormData(form);
 
     try {
-      const res = await fetch("https://formspree.io/f/YOUR_FORM_ID", {
+      // Submits to RSForm!Pro in Joomla. Replace RSFORM_ID with the form's ID
+      // (Joomla admin → RSForm!Pro → the form). Joomla handles the email via SMTP.
+      const res = await fetch("/index.php?option=com_rsform&task=submissions.submit&formId=RSFORM_ID", {
         method: "POST",
         body: data,
         headers: { Accept: "application/json" },
@@ -91,7 +93,7 @@ export default function ContactForm() {
         >
           <option value="">Select a service...</option>
           <option value="custom-home">Custom Home Construction</option>
-          <option value="commercial">Commercial Construction</option>
+          <option value="healthcare">Healthcare Facilities</option>
           <option value="hotel-resort">Hotel &amp; Resort Remodeling</option>
           <option value="restaurant">Restaurant &amp; Hospitality Fit-Out</option>
           <option value="concrete">Concrete &amp; Masonry</option>

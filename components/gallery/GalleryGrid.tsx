@@ -21,12 +21,19 @@ const items: GalleryItem[] = [
   { src: "/assets/images/new%20pictures/Outdoor%20Seating.jpg",              alt: "Kings' Shops Common Area — After (Outdoor Seating)",      name: "Kings' Shops Common Area — After (Outdoor Seating)",      category: "retail", cat: "Retail & Commercial" },
   { src: "/assets/images/new%20pictures/Lululemon.jpg",                      alt: "Kings' Shops Common Area — After (Lululemon)",            name: "Kings' Shops Common Area — After (Lululemon)",            category: "retail", cat: "Retail & Commercial" },
   { src: "/assets/images/new%20pictures/Restroom%20Walkway.jpg",             alt: "Kings' Shops — Restroom Renovation (Walkway)",    name: "Kings' Shops — Restroom Renovation (Walkway)",    category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Kings%20Shops%20Restroom%201.jpg", alt: "Kings' Shops — Restroom Renovation", name: "Kings' Shops — Restroom Renovation", category: "retail", cat: "Retail & Commercial" },
+  { src: "/assets/images/new%20pictures/Kings%20Shops%20Restroom%202.jpg", alt: "Kings' Shops — Restroom Renovation", name: "Kings' Shops — Restroom Renovation", category: "retail", cat: "Retail & Commercial" },
   // Mauna Kea Salon
-  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg", alt: "Mauna Kea Salon Treatment Area", name: "Mauna Kea Salon — Treatment Area",  category: "spa", cat: "Spa & Wellness" },
-  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",            alt: "Mauna Kea Salon Lobby",          name: "Mauna Kea Salon — Reception Lobby", category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Salon%20Treatment%20Area.jpg",     alt: "Mauna Kea Salon", name: "Mauna Kea Salon", category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Salon%20Lobby.jpg",                alt: "Mauna Kea Salon", name: "Mauna Kea Salon", category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Mauna%20Kea%20Salon%203.jpg",     alt: "Mauna Kea Salon", name: "Mauna Kea Salon", category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Mauna%20Kea%20Salon%204.jpg",     alt: "Mauna Kea Salon", name: "Mauna Kea Salon", category: "spa", cat: "Spa & Wellness" },
+  { src: "/assets/images/new%20pictures/Mauna%20Kea%20Salon%205.jpg",     alt: "Mauna Kea Salon", name: "Mauna Kea Salon", category: "spa", cat: "Spa & Wellness" },
   // Kona Hospital Oncology Department
-  { src: "/assets/images/new%20pictures/Hospital%20Oncology%201.jpg", alt: "Kona Hospital Oncology Department", name: "Kona Hospital Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
-  { src: "/assets/images/new%20pictures/Hospital%20Oncology%202.jpg", alt: "Kona Hospital Oncology Department", name: "Kona Hospital Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
+  { src: "/assets/images/new%20pictures/Hospital%20Oncology%201.jpg", alt: "Kona Hospital Oncology Department", name: "Kona Hospital — Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
+  { src: "/assets/images/new%20pictures/Hospital%20Oncology%202.jpg", alt: "Kona Hospital Oncology Department", name: "Kona Hospital — Oncology Department", category: "healthcare", cat: "Hospital & Healthcare" },
+  { src: "/assets/images/new%20pictures/Kona%20Hospital%20Pharmacy%201.jpg",               alt: "Kona Hospital Pharmacy", name: "Kona Hospital — Pharmacy", category: "healthcare", cat: "Hospital & Healthcare" },
+  { src: "/assets/images/new%20pictures/Kona%20Hospital%20Pharmacy%20Compound%20Suite.jpg", alt: "Kona Hospital Pharmacy", name: "Kona Hospital — Pharmacy", category: "healthcare", cat: "Hospital & Healthcare" },
 
   // ── HIGH-RES NEW PHOTOS ───────────────────────────────────────────────────
   { src: "/assets/images/new%20pictures/KohalaSide.jpg",                         alt: "Kohala Coast",              name: "Kohala Coast Resort",          category: "hotels",      cat: "Hotels & Resorts" },

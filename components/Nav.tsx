@@ -36,9 +36,9 @@ export default function Nav() {
         scrolled ? "shadow-md" : "border-b border-gray-100"
       }`}
     >
-      <div className="max-w-6xl mx-auto px-6 h-24 flex items-center justify-between">
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-3 shrink-0">
+      <div className="relative w-full h-24 flex items-center">
+        {/* Brand — pinned to left edge of viewport */}
+        <Link href="/" className="absolute left-6 z-10 flex items-center gap-3 shrink-0">
           <Image
             src="/assets/logo/WhiteSandsLogo_clear.gif"
             alt="White Sands Construction"
@@ -46,43 +46,45 @@ export default function Nav() {
             height={96}
             unoptimized
           />
-          <span className="font-heading font-black text-lg uppercase tracking-widest text-primary leading-tight">
-            White Sands<br />Construction, Inc
+          <span className="font-heading font-black text-xl uppercase tracking-widest text-primary leading-tight">
+            White Sands Construction, Inc.
           </span>
         </Link>
 
-        {/* Desktop links */}
-        <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
-          {links.map(({ href, label }) => (
+        {/* Desktop links + mobile hamburger — stay in centered container, untouched */}
+        <div className="max-w-6xl mx-auto w-full px-6 flex items-center justify-end">
+          <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+            {links.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`font-heading font-semibold text-[0.72rem] uppercase tracking-widest px-3 py-2 rounded transition-colors duration-150 ${
+                  isActive(href)
+                    ? "text-primary"
+                    : "text-gray-700 hover:text-primary"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
             <Link
-              key={href}
-              href={href}
-              className={`font-heading font-semibold text-[0.72rem] uppercase tracking-widest px-3 py-2 rounded transition-colors duration-150 ${
-                isActive(href)
-                  ? "text-primary"
-                  : "text-gray-700 hover:text-primary"
-              }`}
+              href="/contact"
+              className="ml-3 font-heading font-semibold text-[0.72rem] uppercase tracking-widest bg-accent text-dark px-5 py-2.5 rounded-full transition-colors duration-150 hover:bg-amber-500"
             >
-              {label}
+              Get a Quote
             </Link>
-          ))}
-          <Link
-            href="/contact"
-            className="ml-3 font-heading font-semibold text-[0.72rem] uppercase tracking-widest bg-accent text-dark px-5 py-2.5 rounded-full transition-colors duration-150 hover:bg-amber-500"
-          >
-            Get a Quote
-          </Link>
-        </nav>
+          </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden p-2 text-gray-700 cursor-pointer"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle navigation"
-          aria-expanded={open}
-        >
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden p-2 text-gray-700 cursor-pointer"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle navigation"
+            aria-expanded={open}
+          >
+            {open ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}

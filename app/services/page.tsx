@@ -3,7 +3,7 @@
 import PageHero  from "@/components/PageHero";
 import CtaBanner from "@/components/CtaBanner";
 import { motion } from "framer-motion";
-import { Home, Building2, Star, UtensilsCrossed, Layers, Hammer } from "lucide-react";
+import { Home, HeartPulse, Star, UtensilsCrossed, Layers, Hammer } from "lucide-react";
 
 const services = [
   {
@@ -12,9 +12,9 @@ const services = [
     desc:  "From ground-up custom builds to major additions, we bring your residential vision to life with the craftsmanship Hawaii homeowners expect. Every detail, inside and out.",
   },
   {
-    icon:  Building2,
-    title: "Commercial Construction",
-    desc:  "Large-scale commercial builds, tenant improvements, and ground-up commercial development. We work with architects and developers to deliver on time and on budget.",
+    icon:  HeartPulse,
+    title: "Healthcare Facilities",
+    desc:  "Pharmacy build-outs, oncology suites, and hospital renovations across Hawaii. We understand the exacting tolerances and scheduling demands of occupied healthcare facilities — delivering precise, compliant work in sensitive environments.",
   },
   {
     icon:  Star,
