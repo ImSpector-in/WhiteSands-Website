@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build && npm run build:static",
-  "outputDirectory": "static",
+  "buildCommand": "npm run build",
+  "outputDirectory": "out",
   "framework": null,
   "cleanUrls": true
 }

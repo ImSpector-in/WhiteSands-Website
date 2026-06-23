@@ -15,10 +15,8 @@
 
 # next.js
 /.next/
+# out/ holds the generated static deliverable (built by `npm run build`)
 /out/
-
-# generated static site (built on deploy by `npm run build:static`)
-/static/
 
 # production
 /build

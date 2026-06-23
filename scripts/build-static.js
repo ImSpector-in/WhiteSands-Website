@@ -1,6 +1,10 @@
 /**
- * build-static.js — port the Next.js export in `out/` to a STANDALONE static
- * site in `static/` with NO React, NO Next runtime, and NO hydration.
+ * build-static.js — turn the Next.js export in `out/` into a STANDALONE static
+ * site (still `out/`) with NO React, NO Next runtime, and NO hydration.
+ *
+ * It builds the clean site into a temp dir, then swaps it in for `out/`, so the
+ * final `out/` IS the deliverable: open `out/index.html` straight off disk, or
+ * zip `out/` for the host — exactly what Karl @ Kona Networks asked for.
  *
  * Why this exists
  * ---------------
@@ -26,15 +30,19 @@
  *     one stylesheet is fully self-contained (fonts work over file:// too).
  *   - `assets/` and the root favicon are copied verbatim.
  *
- * The result in `static/` stands alone — it does not depend on out/, _next, or
- * the React source. Re-run with: npm run build:static
+ * The resulting `out/` stands alone — no _next/, no RSC .txt payloads, no React.
+ * Runs as the last step of `npm run build` (after next build + postbuild).
  */
 const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
 const OUT = path.join(ROOT, "out");
-const DEST = path.join(ROOT, "static");
+// We build the clean static site into a temp dir, then swap it in for out/ —
+// so the final deliverable IS out/ (open out/index.html directly, zip out/),
+// exactly as the host (Karl @ Kona Networks) expects. out/ starts as the Next
+// export (our source) and ends as the React-free static site.
+const DEST = path.join(ROOT, ".static-build-tmp");
 const MEDIA = path.join(OUT, "_next", "static", "media");
 const CHUNKS = path.join(OUT, "_next", "static", "chunks");
 
@@ -187,17 +195,23 @@ function main() {
   // js — site.js is hand-maintained in scripts/site.js; copy it in
   fs.copyFileSync(path.join(__dirname, "site.js"), path.join(DEST, "js", "site.js"));
 
-  // assets + favicon + svgs
+  // assets + favicon + svgs (.htaccess too, for the Apache host handoff)
   copyDir(path.join(OUT, "assets"), path.join(DEST, "assets"));
   for (const f of fs.readdirSync(OUT)) {
-    if (f === "favicon.ico" || f.endsWith(".svg")) {
+    if (f === "favicon.ico" || f === ".htaccess" || f.endsWith(".svg")) {
       fs.copyFileSync(path.join(OUT, f), path.join(DEST, f));
     }
   }
 
+  // Swap the clean build in for out/. Everything above read from out/ and wrote
+  // into DEST, so out/ is safe to replace now. After this, out/ contains ONLY
+  // the static site — no _next/, no RSC .txt payloads, no React.
+  rmrf(OUT);
+  fs.renameSync(DEST, OUT);
+
   console.log(
-    `static/: ${PAGES.length} pages, self-contained CSS (${inlined} embedded font refs), ` +
-      `assets + css + js copied. Open static/index.html directly or host the folder.`,
+    `out/: ${PAGES.length} pages, self-contained CSS (${inlined} embedded font refs), ` +
+      `React-free. Open out/index.html directly or host the folder.`,
   );
 }
 

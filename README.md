@@ -4,9 +4,16 @@ Marketing website for White Sands Construction, Inc. (Kamuela, HI).
 
 ## Stack
 
-- Next.js 16 (App Router, static export)
+- Next.js 16 (App Router, static export) — used as the **build-time renderer**
 - Tailwind CSS v4
 - TypeScript
+
+The **shipped site is plain static HTML/CSS with a little vanilla JavaScript —
+no React at runtime.** Next.js renders the pages at build time; a post-build
+step then strips out the React/Next runtime and re-adds the interactive pieces
+(hero carousel, mobile menu, gallery filter + lightbox) with `out/js/site.js`.
+The result opens correctly straight off disk (`out/index.html`) and hosts on any
+plain web server, with no hydration and no console errors.
 
 ## Setup
 
@@ -28,8 +35,30 @@ Visit http://localhost:3000
 npm run build
 ```
 
-This generates a static site in the `out/` folder. Upload the **contents**
-of `out/` to your web server's document root.
+This runs three steps in order and leaves the finished site in `out/`:
+
+1. `next build` — renders the pages (static export)
+2. `scripts/postbuild.js` — pretty-prints the HTML, rewrites paths to relative,
+   embeds the fonts into the CSS
+3. `scripts/build-static.js` — removes the React/Next runtime, drops in
+   `js/site.js`, and swaps the result in as `out/`
+
+The output is fully self-contained and portable:
+
+- **Open it locally:** double-click `out/index.html` — it renders off disk
+  (`file://`) with working heroes, no server needed. (Or `npx serve out`.)
+- **Host it:** upload the **contents** of `out/` to your web server's document
+  root. No Node.js required on the server.
+
+To cut a versioned deliverable, `npm run release` builds, runs a portability
+check, zips `out/`, and attaches it as a GitHub release with a list of changed
+files (requires the `gh` CLI to be authenticated).
+
+### Editing content
+
+Page content lives in the React source (`app/`, `components/`) — that's what the
+build renders from. Edit there, then `npm run build` to regenerate `out/`. Don't
+hand-edit `out/`; it's overwritten on every build.
 
 ## Apache configuration
 
