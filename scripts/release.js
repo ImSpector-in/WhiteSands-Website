@@ -3,9 +3,9 @@
  *
  * Runs the full finish-line process so a deliverable is attached to the repo:
  *   1. npm install            — ensure deps are present
- *   2. npm run build          — next build + postbuild (relative paths, fonts, format)
- *   3. portability check      — fail if any built HTML still has absolute paths
- *   4. zip the contents of out/
+ *   2. npm run build + build:static — render pages, then strip React into static/
+ *   3. portability check      — fail if static/ has any React/Next or absolute paths
+ *   4. zip the contents of static/
  *   5. create a GitHub release with the zip attached, the notes listing every
  *      file changed since the previous release
  *
@@ -17,7 +17,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-const OUT_DIR = path.join(ROOT, "out");
+const STATIC_DIR = path.join(ROOT, "static");
 const ZIP_NAME = "white-sands-site.zip";
 
 const run = (cmd) => {
@@ -26,41 +26,46 @@ const run = (cmd) => {
 };
 const capture = (cmd) => execSync(cmd, { cwd: ROOT }).toString().trim();
 
-// 1 + 2 — install and build
+// 1 + 2 — install, then build the standalone static site (next build +
+// postbuild produce the rendered pages, build:static strips React out of them).
 run("npm install");
 run("npm run build");
+run("npm run build:static");
 
-// 3 — portability gate. No absolute /assets/ may remain in the built HTML or
-// the JS chunks (a stray one would 404 over file://). /_next/ is intentionally
-// left absolute inside JS (Turbopack invariant), so we only flag /assets/ there.
-// Only /assets/ must be relative. /_next/ JS chunks are intentionally absolute
-// (required for Turbopack hydration); the CSS link is relativized separately.
-const htmlBad = fs
-  .readdirSync(OUT_DIR)
-  .filter((f) => f.endsWith(".html"))
-  .filter((f) => /[^.]\/assets\//.test(fs.readFileSync(path.join(OUT_DIR, f), "utf8")))
-  .map((f) => `out/${f}`);
+// 3 — portability gate on the static deliverable. The whole point is that it
+// opens off disk and hosts anywhere, so NOTHING React/Next may survive and the
+// one stylesheet must be self-contained:
+//   - no `/_next/` references at all (the React runtime is gone)
+//   - no absolute `/assets/` paths (a stray one would 404 over file://)
+//   - no leftover `url(../media/..)` font refs in the CSS (we ship no media/)
+const htmlFiles = fs.readdirSync(STATIC_DIR).filter((f) => f.endsWith(".html"));
+const htmlBad = htmlFiles
+  .filter((f) => {
+    const s = fs.readFileSync(path.join(STATIC_DIR, f), "utf8");
+    return s.includes("/_next/") || /[^.]\/assets\//.test(s);
+  })
+  .map((f) => `static/${f}`);
 
-const chunksDir = path.join(OUT_DIR, "_next", "static", "chunks");
-const jsBad = (fs.existsSync(chunksDir) ? fs.readdirSync(chunksDir) : [])
-  .filter((f) => f.endsWith(".js"))
-  .filter((f) => /[^.]\/assets\//.test(fs.readFileSync(path.join(chunksDir, f), "utf8")))
-  .map((f) => `out/_next/static/chunks/${f}`);
+const cssPath = path.join(STATIC_DIR, "css", "style.css");
+const cssBad =
+  fs.existsSync(cssPath) && /url\(\.\.\/media\//.test(fs.readFileSync(cssPath, "utf8"))
+    ? ["static/css/style.css (unresolved ../media/ fonts)"]
+    : [];
 
-const badFiles = [...htmlBad, ...jsBad];
+const badFiles = [...htmlBad, ...cssBad];
 if (badFiles.length) {
-  console.error(`Absolute asset paths still present in: ${badFiles.join(", ")} — aborting.`);
+  console.error(`Portability check failed in: ${badFiles.join(", ")} — aborting.`);
   process.exit(1);
 }
-console.log("verified: built HTML + JS use relative asset paths.");
+console.log("verified: static site is React-free with relative paths + embedded fonts.");
 
-// 4 — zip the contents of out/ (entries land at the zip root).
+// 4 — zip the contents of static/ (entries land at the zip root).
 // Use tar/bsdtar (built into Windows 10/11, macOS and Linux): it writes
 // spec-compliant forward-slash paths, so the zip extracts cleanly on any host.
 // PowerShell 5.1's Compress-Archive writes backslashes, which break on Linux.
 const zipPath = path.join(ROOT, ZIP_NAME);
 if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
-run(`tar -a -c -f "${ZIP_NAME}" -C out .`);
+run(`tar -a -c -f "${ZIP_NAME}" -C static .`);
 
 // 5 — find the previous release and list changed files since then
 let prevTag = "";
@@ -83,7 +88,7 @@ const tag = `build-${new Date().toISOString().slice(0, 10)}-${sha}`;
 const notesPath = path.join(ROOT, "RELEASE_NOTES.tmp.md");
 fs.writeFileSync(
   notesPath,
-  `Static build of the White Sands site (contents of \`out/\`).\n\n` +
+  `Static build of the White Sands site (contents of \`static/\`).\n\n` +
     `Open \`index.html\` directly in a browser (file://) or drop the folder on any host — ` +
     `all paths are relative and fonts are embedded.\n\n` +
     `## Files changed since ${prevTag || "the start"}\n\n${changed}\n`,

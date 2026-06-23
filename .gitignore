@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# generated static site (built on deploy by `npm run build:static`)
+/static/
+
 # production
 /build
 
