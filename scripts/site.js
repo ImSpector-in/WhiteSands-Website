@@ -202,7 +202,11 @@
 
     function applyFilter(label) {
       cards.forEach(function (card) {
-        var show = label === "All Projects" || catOf(card) === label;
+        var cat = catOf(card);
+        // Most filter buttons match the card's category label exactly. The one
+        // exception is the "Healthcare" button, whose cards are labelled
+        // "Hospital & Healthcare" — so also accept a label the category ends with.
+        var show = label === "All Projects" || cat === label || cat.endsWith(label);
         card.hidden = !show;
       });
     }
