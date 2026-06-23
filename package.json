@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/prettify-html.js",
+    "build": "next build && node scripts/postbuild.js",
     "start": "next start",
+    "release": "node scripts/release.js",
     "lint": "eslint"
   },
   "dependencies": {
