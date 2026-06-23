@@ -16,26 +16,23 @@ export default function CtaBanner({
     <section className="bg-accent py-20 text-center px-6">
       <motion.h2
         className="font-heading font-black text-3xl md:text-4xl lg:text-5xl uppercase tracking-wide text-dark mb-3"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        initial={false}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         {title}
       </motion.h2>
       <motion.p
         className="text-dark/70 text-base mb-8"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
+        initial={false}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.15 }}
       >
         {subtitle}
       </motion.p>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        initial={false}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.25 }}
       >
         <Link

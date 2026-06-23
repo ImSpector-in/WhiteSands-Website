@@ -113,12 +113,24 @@ function processHtml(file) {
     '="./$1',
   );
 
-  // Global asset/chunk path rewrite. Catches every context — src, srcSet,
-  // inline styles (incl. &#x27;-encoded quotes), and the inline RSC hydration
-  // payload — not just src/href attributes. The (?<!\.) lookbehind skips paths
-  // already made relative (./assets/), so reruns/overlaps don't double-prefix.
+  // /assets/ paths -> relative everywhere (src, srcSet, inline styles incl.
+  // &#x27;-encoded quotes, and the inline RSC payload). The (?<!\.) lookbehind
+  // skips already-relative paths so reruns don't double-prefix. Safe for
+  // hydration — these are image URLs, not chunk references.
   html = html.replace(/(?<!\.)\/assets\//g, "./assets/");
-  html = html.replace(/(?<!\.)\/_next\//g, "./_next/");
+
+  // The CSS stylesheet link -> relative, so styles load when the page is
+  // opened directly off disk (file://). CSS is not part of JS hydration.
+  //
+  // CRITICAL: do NOT relativize the JS chunk paths (`<script src="/_next/...">`,
+  // the `<link as="script">` preload, or the inline `self.__next_f` RSC payload).
+  // The Turbopack runtime resolves chunks against an absolute "/_next/" base and
+  // asserts on it; rewriting those to "./_next/" silently breaks hydration (no
+  // error, but React never attaches — the carousel, mobile menu and gallery
+  // lightbox all go dead). Kept absolute, the hosted site (served at the domain
+  // root) hydrates and is fully interactive; over file:// the chunks 404 and the
+  // page is a styled static preview (content is visible via `initial={false}`).
+  html = html.replace(/href="\/_next\/([^"]*\.css)"/g, 'href="./_next/$1"');
 
   // Finally, pretty-print so "View Source" is readable (Karl's request #1).
   html = beautify(html, BEAUTIFY_OPTS);

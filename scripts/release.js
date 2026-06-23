@@ -33,10 +33,12 @@ run("npm run build");
 // 3 — portability gate. No absolute /assets/ may remain in the built HTML or
 // the JS chunks (a stray one would 404 over file://). /_next/ is intentionally
 // left absolute inside JS (Turbopack invariant), so we only flag /assets/ there.
+// Only /assets/ must be relative. /_next/ JS chunks are intentionally absolute
+// (required for Turbopack hydration); the CSS link is relativized separately.
 const htmlBad = fs
   .readdirSync(OUT_DIR)
   .filter((f) => f.endsWith(".html"))
-  .filter((f) => /[^.]\/assets\/|[^.]\/_next\//.test(fs.readFileSync(path.join(OUT_DIR, f), "utf8")))
+  .filter((f) => /[^.]\/assets\//.test(fs.readFileSync(path.join(OUT_DIR, f), "utf8")))
   .map((f) => `out/${f}`);
 
 const chunksDir = path.join(OUT_DIR, "_next", "static", "chunks");

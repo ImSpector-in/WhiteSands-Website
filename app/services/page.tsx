@@ -51,9 +51,8 @@ export default function ServicesPage() {
         <div className="max-w-6xl mx-auto px-6">
           <motion.div
             className="mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={false}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-heading font-black text-3xl md:text-4xl uppercase tracking-wide mb-3">
@@ -70,9 +69,8 @@ export default function ServicesPage() {
               <motion.div
                 key={title}
                 className="bg-gray-50 rounded p-8"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
+                initial={false}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
               >
                 <Icon size={44} className="text-primary mb-5" strokeWidth={1.3} />

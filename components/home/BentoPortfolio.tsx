@@ -110,9 +110,8 @@ export default function BentoPortfolio() {
         {/* Section header */}
         <motion.div
           className="flex flex-wrap items-end justify-between gap-4 mb-10"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={false}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <div>

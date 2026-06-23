@@ -39,9 +39,8 @@ export default function ServicesPreview() {
         {/* Header */}
         <motion.div
           className="mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={false}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <h2 className="font-heading font-black text-3xl md:text-4xl uppercase tracking-wide mb-3">
@@ -57,9 +56,8 @@ export default function ServicesPreview() {
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-12"
           variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
+          initial={false}
+          animate="show"
         >
           {services.map(({ icon: Icon, title, desc }) => (
             <motion.div key={title} variants={card} className="text-center">

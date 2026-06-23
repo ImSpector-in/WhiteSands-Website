@@ -16,9 +16,8 @@ export default function HomeIntro() {
 
         {/* Left — text */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={false}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl tracking-tight text-dark mb-5">
@@ -36,9 +35,8 @@ export default function HomeIntro() {
           {stats.map(({ value, label, detail }, i) => (
             <motion.div
               key={label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              initial={false}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
               <div className="font-heading font-black text-4xl md:text-5xl text-primary leading-none mb-1">

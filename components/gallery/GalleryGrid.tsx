@@ -177,7 +177,9 @@ export default function GalleryGrid() {
 
       {/* Grid */}
       <motion.div layout className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-        <AnimatePresence mode="popLayout">
+        {/* initial={false}: cards render visible on first load (mount animations are
+            unreliable in this static export); filter changes still animate. */}
+        <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((item, i) => (
             <motion.div
               key={item.src}

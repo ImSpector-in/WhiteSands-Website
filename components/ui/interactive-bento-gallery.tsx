@@ -323,7 +323,7 @@ const InteractiveBentoGallery: React.FC<InteractiveBentoGalleryProps> = ({ media
         ) : (
           <motion.div
             className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-3 auto-rows-[60px]"
-            initial="hidden"
+            initial={false}
             animate="visible"
             exit="hidden"
             variants={{

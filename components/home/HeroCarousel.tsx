@@ -91,7 +91,7 @@ export default function HeroCarousel() {
 
       {/* Slide-synced tagline — screen center */}
       <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-6 pointer-events-none">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.p
             key={slides[current].tagline}
             className="font-heading font-light text-white/90 uppercase tracking-[0.3em] text-2xl md:text-3xl lg:text-4xl"

@@ -43,9 +43,8 @@ export default function PortfolioTeaser() {
         {/* Header */}
         <motion.div
           className="flex flex-wrap items-end justify-between gap-4 mb-10"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={false}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <div>
@@ -68,9 +67,8 @@ export default function PortfolioTeaser() {
             <motion.div
               key={src}
               className="group relative aspect-[4/3] overflow-hidden rounded-sm cursor-pointer"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
+              initial={false}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.07 }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
