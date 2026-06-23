@@ -82,13 +82,14 @@ function processCss(file, fontMap) {
 
 function processJs(file) {
   let js = fs.readFileSync(file, "utf8");
-  // Asset string literals (gallery image arrays, etc.) -> relative.
+  // Asset paths -> relative, in any quote style ("...", '...', `...`).
+  // The (?<!\.) lookbehind skips paths already relative (./assets/).
   // NOTE: deliberately do NOT touch "/_next/" here. The Turbopack runtime
   // derives its chunk base by asserting its own currentScript.src contains
   // "/_next/"; rewriting that literal breaks the check ("Invariant: Expected
   // document.currentScript src to contain '/_next/'"). The script tags are
   // already loaded relatively, so the runtime resolves the base correctly.
-  js = js.replace(/"\/assets\//g, '"./assets/');
+  js = js.replace(/(?<!\.)\/assets\//g, "./assets/");
   fs.writeFileSync(file, js, "utf8");
 }
 
