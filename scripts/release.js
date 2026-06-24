@@ -76,10 +76,32 @@ try {
 }
 let changed = "_First release — no previous build to diff against._";
 if (prevTag) {
-  const diff = capture(`git diff --name-only ${prevTag} HEAD`);
-  changed = diff
-    ? diff.split("\n").map((f) => `- \`${f}\``).join("\n")
-    : `_No source files changed since ${prevTag}._`;
+  // The release tag may not exist locally (it lives on GitHub). Its name ends in
+  // the commit short-sha (build-YYYY-MM-DD-<sha>), which IS in local history, so
+  // diff against whichever ref resolves. Fall back gracefully if neither does.
+  const prevSha = prevTag.split("-").pop();
+  let ref = null;
+  for (const candidate of [prevTag, prevSha]) {
+    try {
+      capture(`git rev-parse --verify --quiet "${candidate}^{commit}"`);
+      ref = candidate;
+      break;
+    } catch {
+      /* not a resolvable ref locally — try the next */
+    }
+  }
+  if (ref) {
+    try {
+      const diff = capture(`git diff --name-only ${ref} HEAD`);
+      changed = diff
+        ? diff.split("\n").map((f) => `- \`${f}\``).join("\n")
+        : `_No source files changed since ${prevTag}._`;
+    } catch {
+      changed = `_Could not compute file diff against ${prevTag}._`;
+    }
+  } else {
+    changed = `_Previous release ${prevTag} not found in local history — diff skipped._`;
+  }
 }
 
 // Tag this build by date + short commit so releases are unique and traceable.
