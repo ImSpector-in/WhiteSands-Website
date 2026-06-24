@@ -2,18 +2,29 @@
 
 Marketing website for White Sands Construction, Inc. (Kamuela, HI).
 
-## Stack
+**This is a static website** — the deployed/shipped site in `out/` is plain
+HTML, CSS, and a little vanilla JavaScript, with **no React or framework at
+runtime**. It opens correctly straight off disk (`out/index.html`) and hosts on
+any plain web server (no Node.js required), with no hydration and no console
+errors.
 
-- Next.js 16 (App Router, static export) — used as the **build-time renderer**
-- Tailwind CSS v4
-- TypeScript
+## What ships (the `out/` folder)
 
-The **shipped site is plain static HTML/CSS with a little vanilla JavaScript —
-no React at runtime.** Next.js renders the pages at build time; a post-build
-step then strips out the React/Next runtime and re-adds the interactive pieces
-(hero carousel, mobile menu, gallery filter + lightbox) with `out/js/site.js`.
-The result opens correctly straight off disk (`out/index.html`) and hosts on any
-plain web server, with no hydration and no console errors.
+- Plain HTML pages (formatted/readable source)
+- One self-contained CSS file (`css/style.css`, fonts embedded as data URIs)
+- One vanilla-JS file (`js/site.js`) for the hero carousel, mobile menu, gallery
+  filter + lightbox, and contact form
+- `assets/` images, favicon, and an `.htaccess` for Apache hosts
+
+## How it's built (tooling — not shipped to the site)
+
+The HTML is authored as components and generated at build time, then the build
+strips the framework back out so only static files ship:
+
+- **Next.js 16** (App Router) + **Tailwind CSS v4** + **TypeScript** — used only
+  as the **build-time renderer**; none of it runs on the live site.
+- `scripts/postbuild.js` + `scripts/build-static.js` — convert the render into
+  the React-free static site described above.
 
 ## Setup
 
