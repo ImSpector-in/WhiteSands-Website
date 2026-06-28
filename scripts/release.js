@@ -18,7 +18,11 @@ const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
 const OUT_DIR = path.join(ROOT, "out");
-const ZIP_NAME = "white-sands-site.zip";
+// Build date stamps both the zip filename and the release tag, per Karl's
+// request to include the build date in the zip name (e.g.
+// white-sands-site-2026-06-28.zip).
+const BUILD_DATE = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+const ZIP_NAME = `white-sands-site-${BUILD_DATE}.zip`;
 
 const run = (cmd) => {
   console.log(`$ ${cmd}`);
@@ -59,13 +63,21 @@ if (badFiles.length) {
 }
 console.log("verified: out/ is React-free with relative paths + embedded fonts.");
 
-// 4 — zip the contents of out/ (entries land at the zip root).
+// 4 — zip the contents of out/ so each file/folder lands at the zip ROOT.
 // Use tar/bsdtar (built into Windows 10/11, macOS and Linux): it writes
 // spec-compliant forward-slash paths, so the zip extracts cleanly on any host.
 // PowerShell 5.1's Compress-Archive writes backslashes, which break on Linux.
-const zipPath = path.join(ROOT, ZIP_NAME);
-if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
-run(`tar -a -c -f "${ZIP_NAME}" -C out .`);
+//
+// We pass the top-level entries BY NAME instead of "." on purpose: archiving
+// "." makes tar record a single-period top-level folder, which Karl reported
+// breaks extraction in Windows Explorer. Naming the entries avoids that folder.
+const oldZips = fs.readdirSync(ROOT).filter((f) => /^white-sands-site.*\.zip$/.test(f));
+for (const z of oldZips) fs.unlinkSync(path.join(ROOT, z));
+const entries = fs
+  .readdirSync(OUT_DIR)
+  .map((e) => `"${e}"`)
+  .join(" ");
+run(`tar -a -c -f "${ZIP_NAME}" -C out ${entries}`);
 
 // 5 — find the previous release and list changed files since then
 let prevTag = "";
@@ -106,7 +118,7 @@ if (prevTag) {
 
 // Tag this build by date + short commit so releases are unique and traceable.
 const sha = capture("git rev-parse --short HEAD");
-const tag = `build-${new Date().toISOString().slice(0, 10)}-${sha}`;
+const tag = `build-${BUILD_DATE}-${sha}`;
 const notesPath = path.join(ROOT, "RELEASE_NOTES.tmp.md");
 fs.writeFileSync(
   notesPath,
