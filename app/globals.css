@@ -31,3 +31,37 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Fade/scale transitions driven by scripts/site.js: gallery filter switching,
+   the gallery + bento lightbox, and image transitions within it. */
+.ws-fade {
+  transition: opacity 0.2s ease;
+}
+.ws-fade-out {
+  opacity: 0;
+}
+.ws-fade-scale {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.ws-fade-scale-out {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Bento gallery (home): hover zoom + caption reveal, applied by initBento()
+   in scripts/site.js. */
+.ws-bento-tile {
+  transition: transform 0.2s ease;
+}
+.ws-bento-tile:hover,
+.ws-bento-tile:focus-within {
+  transform: scale(1.02);
+}
+.ws-bento-caption {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.ws-bento-tile:hover .ws-bento-caption,
+.ws-bento-tile:focus-within .ws-bento-caption {
+  opacity: 1;
+}

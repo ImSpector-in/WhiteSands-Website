@@ -10,7 +10,9 @@
  *   1. Hero carousel      (home)        — autoplay + arrows + dots, crossfade
  *   2. Header             (every page)  — scroll shadow + mobile menu toggle
  *   3. Gallery            (gallery)     — category filter + lightbox
- *   4. Contact form       (contact)     — submit handler with status states
+ *   4. Bento gallery      (home)        — click-to-enlarge, shares the lightbox
+ *   5. Stats count-up     (home)        — numbers count from zero once in view
+ *   6. Contact form       (contact)     — submit handler with status states
  */
 (function () {
   "use strict";
@@ -21,6 +23,8 @@
     initHero();
     initHeader();
     initGallery();
+    initBento();
+    initStats();
     initContactForm();
   });
 
@@ -183,6 +187,7 @@
 
     var buttons = Array.prototype.slice.call(filterBar.querySelectorAll("button"));
     var cards = Array.prototype.slice.call(grid.children);
+    cards.forEach(function (c) { c.classList.add("ws-fade-scale"); });
 
     var ACTIVE = "border-primary text-primary bg-primary/5".split(" ");
     var IDLE = "border-gray-300 text-gray-500 hover:border-primary hover:text-primary".split(" ");
@@ -195,20 +200,42 @@
       var p = card.querySelector("p");
       return p ? p.textContent.trim() : "";
     }
-    function imgSrcOf(card) {
+    function toItem(card) {
       var img = card.querySelector("img");
-      return img ? img.getAttribute("src") : "";
+      return {
+        src: img ? img.getAttribute("src") : "",
+        alt: img ? img.getAttribute("alt") : "",
+        name: nameOf(card),
+        cat: catOf(card),
+      };
     }
 
     function applyFilter(label) {
-      cards.forEach(function (card) {
+      function matches(card) {
         var cat = catOf(card);
         // Most filter buttons match the card's category label exactly. The one
         // exception is the "Healthcare" button, whose cards are labelled
         // "Hospital & Healthcare" — so also accept a label the category ends with.
-        var show = label === "All Projects" || cat === label || cat.endsWith(label);
-        card.hidden = !show;
-      });
+        return label === "All Projects" || cat === label || cat.endsWith(label);
+      }
+      var leaving = cards.filter(function (c) { return !c.hidden && !matches(c); });
+      var entering = cards.filter(function (c) { return c.hidden && matches(c); });
+      if (!leaving.length && !entering.length) return;
+
+      leaving.forEach(function (c) { c.classList.add("ws-fade-scale-out"); });
+
+      window.setTimeout(function () {
+        leaving.forEach(function (c) { c.hidden = true; c.classList.remove("ws-fade-scale-out"); });
+        entering.forEach(function (c) { c.hidden = false; c.classList.add("ws-fade-scale-out"); });
+        void grid.offsetWidth; // force reflow so the "out" state paints before we remove it
+        entering.forEach(function (c, i) {
+          window.setTimeout(function () { c.classList.remove("ws-fade-scale-out"); }, i * 20);
+        });
+      }, leaving.length ? 200 : 0);
+    }
+
+    function visibleCards() {
+      return cards.filter(function (c) { return !c.hidden; });
     }
 
     buttons.forEach(function (btn) {
@@ -220,63 +247,172 @@
         IDLE.forEach(function (c) { btn.classList.remove(c); });
         ACTIVE.forEach(function (c) { btn.classList.add(c); });
         applyFilter(btn.textContent.trim());
-        closeLightbox();
+        Lightbox.close();
       });
     });
-
-    /* Lightbox — built once, reused. */
-    var lb = buildLightbox();
-    document.body.appendChild(lb.root);
-    var index = -1;
-
-    function visibleCards() {
-      return cards.filter(function (c) { return !c.hidden; });
-    }
-    function openAt(i) {
-      var list = visibleCards();
-      if (i < 0 || i >= list.length) return;
-      index = i;
-      var card = list[i];
-      lb.img.src = imgSrcOf(card);
-      lb.img.alt = nameOf(card);
-      lb.name.textContent = nameOf(card);
-      lb.cat.textContent = catOf(card);
-      lb.counter.textContent = (i + 1) + " / " + list.length;
-      lb.prev.style.display = i > 0 ? "" : "none";
-      lb.next.style.display = i < list.length - 1 ? "" : "none";
-      lb.root.hidden = false;
-    }
-    function closeLightbox() { lb.root.hidden = true; index = -1; }
-    function step(delta) {
-      var list = visibleCards();
-      if (index < 0 || !list.length) return;
-      var n = index + delta;
-      if (n < 0) n = list.length - 1;
-      if (n >= list.length) n = 0;
-      openAt(n);
-    }
 
     cards.forEach(function (card) {
       card.addEventListener("click", function () {
-        openAt(visibleCards().indexOf(card));
+        var list = visibleCards();
+        Lightbox.open(list.map(toItem), list.indexOf(card));
       });
-    });
-    lb.closeBtn.addEventListener("click", closeLightbox);
-    lb.prev.addEventListener("click", function (e) { e.stopPropagation(); step(-1); });
-    lb.next.addEventListener("click", function (e) { e.stopPropagation(); step(1); });
-    lb.root.addEventListener("click", function () { closeLightbox(); });
-    lb.dialog.addEventListener("click", function (e) { e.stopPropagation(); });
-    document.addEventListener("keydown", function (e) {
-      if (lb.root.hidden) return;
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowLeft") step(-1);
-      if (e.key === "ArrowRight") step(1);
     });
   }
 
+  /* ── 4. Bento gallery (home): click-to-enlarge via the shared lightbox ──── */
+  function initBento() {
+    var heading = Array.prototype.filter.call(document.querySelectorAll("h2"), function (h) {
+      return h.textContent.trim() === "Our Work";
+    })[0];
+    var section = heading && heading.closest("section");
+    var grid = section && section.querySelector(".grid");
+    if (!grid) return;
+
+    var tiles = Array.prototype.slice.call(grid.children);
+    function toItem(tile) {
+      var img = tile.querySelector("img");
+      var h3 = tile.querySelector("h3");
+      var p = tile.querySelector("p");
+      return {
+        src: img ? img.getAttribute("src") : "",
+        alt: img ? img.getAttribute("alt") : "",
+        name: h3 ? h3.textContent.trim() : "",
+        cat: p ? p.textContent.trim() : "",
+      };
+    }
+
+    var items = tiles.map(toItem);
+    tiles.forEach(function (tile, i) {
+      tile.addEventListener("click", function () { Lightbox.open(items, i); });
+
+      // Hover zoom + caption reveal: the caption div was server-rendered at
+      // its pre-hydration React state (inline style="opacity:0") and nothing
+      // ever cleared it once React stopped running. An inline style beats any
+      // class-based CSS rule, so it has to be removed here for the
+      // .ws-bento-caption hover rule (in globals.css) to take effect.
+      tile.classList.add("ws-bento-tile");
+      var caption = tile.querySelector("div");
+      if (caption) {
+        caption.style.removeProperty("opacity");
+        caption.classList.add("ws-bento-caption");
+      }
+    });
+  }
+
+  /* ── 5. Stats count-up (home): numbers count from zero once in view ────── */
+  function initStats() {
+    var grid = document.getElementById("home-stats");
+    if (!grid || reduceMotion) return; // leave the server-rendered final values as-is
+
+    var stats = Array.prototype.slice
+      .call(grid.querySelectorAll(".font-heading.font-black.text-4xl"))
+      .map(function (el) {
+        var m = /^(\d+)(.*)$/.exec(el.textContent.trim());
+        return m ? { el: el, value: parseInt(m[1], 10), suffix: m[2] } : null;
+      })
+      .filter(Boolean);
+    if (!stats.length) return;
+
+    stats.forEach(function (s) { s.el.textContent = "0" + s.suffix; });
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function countUp(stat) {
+      var start = null;
+      var duration = 2000;
+      function step(timestamp) {
+        if (start === null) start = timestamp;
+        var progress = Math.min((timestamp - start) / duration, 1);
+        stat.el.textContent = Math.round(easeOutCubic(progress) * stat.value) + stat.suffix;
+        if (progress < 1) window.requestAnimationFrame(step);
+      }
+      window.requestAnimationFrame(step);
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      stats.forEach(countUp);
+      return;
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        var stat = stats.filter(function (s) { return s.el === entry.target; })[0];
+        if (stat) countUp(stat);
+      });
+    }, { rootMargin: "-50px" });
+    stats.forEach(function (s) { observer.observe(s.el); });
+  }
+
+  /* ── Shared lightbox — used by the Gallery page filter grid and the home
+   *    bento grid. Built lazily on first use, reused after that. ──────────── */
+  var Lightbox = (function () {
+    var lb = null;
+    var items = [];
+    var index = -1;
+
+    function paint(i) {
+      var item = items[i];
+      lb.img.src = item.src;
+      lb.img.alt = item.alt;
+      lb.name.textContent = item.name;
+      lb.cat.textContent = item.cat;
+      lb.counter.textContent = (i + 1) + " / " + items.length;
+      lb.prev.style.display = i > 0 ? "" : "none";
+      lb.next.style.display = i < items.length - 1 ? "" : "none";
+    }
+
+    function close() {
+      if (!lb || lb.root.hidden) return;
+      lb.root.classList.add("ws-fade-out");
+      lb.dialog.classList.add("ws-fade-scale-out");
+      window.setTimeout(function () { lb.root.hidden = true; index = -1; }, 200);
+    }
+
+    function step(delta) {
+      if (index < 0 || !items.length) return;
+      index = (index + delta + items.length) % items.length;
+      lb.dialog.classList.add("ws-fade-scale-out");
+      window.setTimeout(function () {
+        paint(index);
+        void lb.dialog.offsetWidth; // force reflow so the "out" state paints before we remove it
+        lb.dialog.classList.remove("ws-fade-scale-out");
+      }, 180);
+    }
+
+    function open(list, i) {
+      if (!lb) {
+        lb = buildLightbox();
+        document.body.appendChild(lb.root);
+        lb.closeBtn.addEventListener("click", close);
+        lb.prev.addEventListener("click", function (e) { e.stopPropagation(); step(-1); });
+        lb.next.addEventListener("click", function (e) { e.stopPropagation(); step(1); });
+        lb.root.addEventListener("click", close);
+        lb.dialog.addEventListener("click", function (e) { e.stopPropagation(); });
+        document.addEventListener("keydown", function (e) {
+          if (lb.root.hidden) return;
+          if (e.key === "Escape") close();
+          if (e.key === "ArrowLeft") step(-1);
+          if (e.key === "ArrowRight") step(1);
+        });
+      }
+      items = list;
+      index = i;
+      if (index < 0 || index >= items.length) return;
+      paint(index);
+      lb.root.hidden = false;
+      lb.root.classList.add("ws-fade-out");
+      lb.dialog.classList.add("ws-fade-scale-out");
+      void lb.root.offsetWidth; // force reflow so the "out" state paints before we remove it
+      lb.root.classList.remove("ws-fade-out");
+      lb.dialog.classList.remove("ws-fade-scale-out");
+    }
+
+    return { open: open, close: close };
+  })();
+
   function buildLightbox() {
     var root = document.createElement("div");
-    root.className = "fixed inset-0 z-50 flex items-center justify-center bg-black/92";
+    root.className = "fixed inset-0 z-50 flex items-center justify-center bg-black/92 ws-fade";
     root.hidden = true;
 
     var closeBtn = iconBtn(
@@ -296,7 +432,7 @@
     );
 
     var dialog = document.createElement("div");
-    dialog.className = "relative mx-4 sm:mx-12 lg:mx-20 max-w-5xl w-full";
+    dialog.className = "relative mx-4 sm:mx-12 lg:mx-20 max-w-5xl w-full ws-fade-scale";
     var img = document.createElement("img");
     img.className = "w-full max-h-[82vh] object-contain rounded-lg";
     var caption = document.createElement("div");

@@ -131,11 +131,19 @@ function transformHtml(html, page) {
       /(<p class="font-heading font-light[^"]*") style="opacity:1">Resort &amp; Commercial Work<\/p>/,
       '$1 id="hero-tagline" style="opacity:1;transition:opacity .4s">Resort &amp; Commercial Work</p>',
     );
+    html = html.replace(
+      '<div class="grid grid-cols-2 gap-x-8 gap-y-10">',
+      '<div id="home-stats" class="grid grid-cols-2 gap-x-8 gap-y-10">',
+    );
     // These injections are literal-string matches against the rendered hero. If
     // the markup ever drifts they would silently no-op and the carousel would
     // go dead, so fail loudly instead.
-    if (!html.includes('id="hero-active"') || !html.includes('id="hero-tagline"')) {
-      console.error("ABORT: hero id injection missed — the hero markup changed. Update transformHtml().");
+    if (
+      !html.includes('id="hero-active"') ||
+      !html.includes('id="hero-tagline"') ||
+      !html.includes('id="home-stats"')
+    ) {
+      console.error("ABORT: hero/stats id injection missed — the markup changed. Update transformHtml().");
       process.exit(1);
     }
   }
