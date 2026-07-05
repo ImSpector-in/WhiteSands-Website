@@ -42,6 +42,7 @@ export default function ServicesPreview() {
           initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          data-reveal
         >
           <h2 className="font-heading font-black text-3xl md:text-4xl uppercase tracking-wide mb-3">
             What We Build
@@ -59,8 +60,14 @@ export default function ServicesPreview() {
           initial={false}
           animate="show"
         >
-          {services.map(({ icon: Icon, title, desc }) => (
-            <motion.div key={title} variants={card} className="text-center">
+          {services.map(({ icon: Icon, title, desc }, i) => (
+            <motion.div
+              key={title}
+              variants={card}
+              className="text-center"
+              data-reveal
+              data-reveal-delay={i * 150}
+            >
               <div className="flex justify-center mb-5">
                 <Icon size={52} className="text-primary" strokeWidth={1.3} />
               </div>

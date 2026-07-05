@@ -12,7 +12,8 @@
  *   3. Gallery            (gallery)     — category filter + lightbox
  *   4. Bento gallery      (home)        — click-to-enlarge, shares the lightbox
  *   5. Stats count-up     (home)        — numbers count from zero once in view
- *   6. Contact form       (contact)     — submit handler with status states
+ *   6. Page-load reveal   (every page)  — sections fade/slide in once
+ *   7. Contact form       (contact)     — submit handler with status states
  */
 (function () {
   "use strict";
@@ -25,6 +26,7 @@
     initGallery();
     initBento();
     initStats();
+    initReveal();
     initContactForm();
   });
 
@@ -341,6 +343,37 @@
       });
     }, { rootMargin: "-50px" });
     stats.forEach(function (s) { observer.observe(s.el); });
+  }
+
+  /* ── 6. Page-load reveal: sections fade/slide into place once, per page ── */
+  function initReveal() {
+    var els = Array.prototype.slice.call(document.querySelectorAll("[data-reveal]"));
+    if (!els.length) return;
+
+    function reveal(el) { el.classList.add("ws-revealed"); }
+
+    els.forEach(function (el) {
+      var delay = el.getAttribute("data-reveal-delay");
+      if (delay) el.style.transitionDelay = delay + "ms";
+    });
+
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      els.forEach(reveal);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        reveal(entry.target);
+      });
+    }, { rootMargin: "0px 0px -40px 0px" });
+    els.forEach(function (el) { observer.observe(el); });
+
+    // Safety net: this drives content visibility, so it must never leave
+    // anything permanently hidden if something above misbehaves.
+    window.setTimeout(function () { els.forEach(reveal); }, 3000);
   }
 
   /* ── Shared lightbox — used by the Gallery page filter grid and the home

@@ -37,6 +37,7 @@ export default function AboutContent() {
             initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
+            data-reveal="left"
           >
             <h2 className="font-heading font-black text-3xl md:text-4xl uppercase tracking-wide mb-3">
               Our Story
@@ -64,6 +65,7 @@ export default function AboutContent() {
             initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
+            data-reveal="right"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -84,6 +86,7 @@ export default function AboutContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="mb-12"
+            data-reveal
           >
             <h2 className="font-heading font-black text-3xl md:text-4xl uppercase tracking-wide mb-3">
               Why Choose White Sands
@@ -102,6 +105,8 @@ export default function AboutContent() {
                 initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
+                data-reveal
+                data-reveal-delay={i * 100}
               >
                 <Icon size={32} className="text-primary shrink-0 mt-1" strokeWidth={1.5} />
                 <div>

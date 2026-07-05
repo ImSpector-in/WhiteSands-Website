@@ -19,6 +19,7 @@ export default function HomeIntro() {
           initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          data-reveal
         >
           <h2 className="font-heading font-black text-3xl md:text-4xl lg:text-5xl tracking-tight text-dark mb-5">
             Building Hawaii<br />Since 1988.
@@ -38,6 +39,8 @@ export default function HomeIntro() {
               initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
+              data-reveal
+              data-reveal-delay={i * 100}
             >
               <div className="font-heading font-black text-4xl md:text-5xl text-primary leading-none mb-1">
                 {value}

@@ -19,6 +19,7 @@ export default function CtaBanner({
         initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        data-reveal
       >
         {title}
       </motion.h2>
@@ -27,6 +28,8 @@ export default function CtaBanner({
         initial={false}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.15 }}
+        data-reveal
+        data-reveal-delay="150"
       >
         {subtitle}
       </motion.p>
@@ -34,6 +37,8 @@ export default function CtaBanner({
         initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.25 }}
+        data-reveal
+        data-reveal-delay="250"
       >
         <Link
           href="/contact"

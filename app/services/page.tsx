@@ -54,6 +54,7 @@ export default function ServicesPage() {
             initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            data-reveal
           >
             <h2 className="font-heading font-black text-3xl md:text-4xl uppercase tracking-wide mb-3">
               What We Do
@@ -72,6 +73,8 @@ export default function ServicesPage() {
                 initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
+                data-reveal
+                data-reveal-delay={i * 80}
               >
                 <Icon size={44} className="text-primary mb-5" strokeWidth={1.3} />
                 <h3 className="font-heading font-bold text-sm uppercase tracking-wide mb-3">

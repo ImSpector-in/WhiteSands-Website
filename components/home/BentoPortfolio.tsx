@@ -113,6 +113,7 @@ export default function BentoPortfolio() {
           initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          data-reveal
         >
           <div>
             <h2 className="font-heading font-black text-3xl md:text-4xl uppercase tracking-wide mb-3">

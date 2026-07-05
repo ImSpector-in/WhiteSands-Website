@@ -21,6 +21,7 @@ export default function PageHero({ title, subtitle, bgImage }: PageHeroProps) {
           initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
+          data-reveal
         >
           {title}
         </motion.h1>
@@ -30,6 +31,8 @@ export default function PageHero({ title, subtitle, bgImage }: PageHeroProps) {
             initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+            data-reveal
+            data-reveal-delay="150"
           >
             {subtitle}
           </motion.p>
