@@ -12,8 +12,9 @@ errors.
 
 - Plain HTML pages (formatted/readable source)
 - One self-contained CSS file (`css/style.css`, fonts embedded as data URIs)
-- One vanilla-JS file (`js/site.js`) for the hero carousel, mobile menu, gallery
-  filter + lightbox, and contact form
+- One vanilla-JS file (`js/site.js`) for the hero carousel, mobile menu, home
+  page bento gallery (click-to-enlarge + hover reveal) and stats count-up,
+  gallery filter + lightbox (both animated), and contact form
 - `assets/` images, favicon, and an `.htaccess` for Apache hosts
 
 ## How it's built (tooling — not shipped to the site)
