@@ -371,9 +371,21 @@
     }, { rootMargin: "0px 0px -40px 0px" });
     els.forEach(function (el) { observer.observe(el); });
 
-    // Safety net: this drives content visibility, so it must never leave
-    // anything permanently hidden if something above misbehaves.
-    window.setTimeout(function () { els.forEach(reveal); }, 3000);
+    // Safety net: only rescues elements that are ALREADY on screen but didn't
+    // get revealed (a genuine IntersectionObserver failure). It must not
+    // blanket-reveal elements the user hasn't scrolled to yet — a fixed
+    // timer would silently pre-reveal below-the-fold content for anyone who
+    // takes more than a few seconds to start scrolling, killing the reveal
+    // animation for them while looking fine to anyone who scrolls quickly.
+    function revealStuckVisible() {
+      els.forEach(function (el) {
+        if (el.classList.contains("ws-revealed")) return;
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) reveal(el);
+      });
+    }
+    window.addEventListener("scroll", revealStuckVisible, { passive: true });
+    window.setTimeout(revealStuckVisible, 3000);
   }
 
   /* ── Shared lightbox — used by the Gallery page filter grid and the home
