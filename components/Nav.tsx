@@ -36,24 +36,25 @@ export default function Nav() {
         scrolled ? "shadow-md" : "border-b border-gray-100"
       }`}
     >
-      <div className="relative w-full h-24 flex items-center">
-        {/* Brand — pinned to left edge of viewport */}
-        <Link href="/" className="absolute left-6 z-10 flex items-center gap-3 shrink-0">
+      <div className="grid grid-cols-[auto_1fr] items-center h-24 w-full">
+        {/* Brand — reserves its own column, can never overlap the nav/hamburger column */}
+        <Link href="/" className="flex items-center gap-3 shrink-0 min-w-0 pl-6">
           <Image
             src="/assets/logo/WhiteSandsLogo_clear.gif"
             alt="White Sands Construction"
             width={96}
             height={96}
             unoptimized
+            className="shrink-0"
           />
-          <span className="font-heading font-black text-xl uppercase tracking-widest text-primary leading-tight">
+          <span className="inline-block font-heading font-black uppercase tracking-widest text-primary leading-tight truncate text-sm max-w-[150px] min-[480px]:max-w-[235px] sm:text-base sm:max-w-none xl:text-xl">
             White Sands Construction, Inc.
           </span>
         </Link>
 
         {/* Desktop links + mobile hamburger — stay in centered container, untouched */}
-        <div className="max-w-6xl mx-auto w-full px-6 flex items-center justify-end">
-          <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
+        <div className="max-w-6xl mx-auto w-full px-6 flex items-center justify-end min-w-0">
+          <nav className="hidden xl:flex items-center gap-1" aria-label="Main navigation">
             {links.map(({ href, label }) => (
               <Link
                 key={href}
@@ -77,7 +78,7 @@ export default function Nav() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 text-gray-700 cursor-pointer"
+            className="xl:hidden p-2 text-gray-700 cursor-pointer shrink-0"
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle navigation"
             aria-expanded={open}
@@ -89,7 +90,7 @@ export default function Nav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
+        <div className="xl:hidden bg-white border-t border-gray-100 shadow-lg">
           <nav className="flex flex-col py-4" aria-label="Mobile navigation">
             {links.map(({ href, label }) => (
               <Link
