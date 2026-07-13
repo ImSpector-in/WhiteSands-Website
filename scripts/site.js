@@ -142,7 +142,7 @@
     var here = (location.pathname.split("/").pop() || "index.html").toLowerCase();
 
     var panel = document.createElement("div");
-    panel.className = "md:hidden bg-white border-t border-gray-100 shadow-lg";
+    panel.className = "xl:hidden bg-white border-t border-gray-100 shadow-lg";
     panel.hidden = true;
     var nav = document.createElement("nav");
     nav.className = "flex flex-col py-4";
@@ -517,20 +517,41 @@
     var form = document.querySelector("main form");
     if (!form) return;
 
+    // Web3Forms access key. It is PUBLIC by design (Web3Forms docs: "Access key
+    // is public") — it only lets someone email us, nothing more — so it lives in
+    // this client-side file, which is exactly how Web3Forms is used on a static
+    // site. Source of truth is NEXT_PUBLIC_WEB3FORMS_KEY in .env.local; this
+    // literal is written from it by scripts/inject-web3forms-key.js.
+    var WEB3FORMS_KEY = "aaee12e1-68fa-4726-b65b-201fea99f606";
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var btn = form.querySelector('button[type="submit"]');
+      var data = new FormData(form);
+
+      // Honeypot: real visitors never fill "botcheck"; bots that auto-fill every
+      // field do. Pretend success so the bot moves on, but send nothing.
+      if (data.get("botcheck")) { showSent(); return; }
+
       if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
 
-      // Posts to RSForm!Pro in Joomla. Replace RSFORM_ID with the real form id
-      // once the form exists in the Joomla admin.
-      fetch("/index.php?option=com_rsform&task=submissions.submit&formId=RSFORM_ID", {
+      fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: "New message from White Sands Construction website",
+          from_name: "White Sands Construction Website",
+          name: data.get("name"),
+          phone: data.get("phone"),
+          email: data.get("email"),
+          project: data.get("project"),
+          message: data.get("message"),
+        }),
       })
-        .then(function (res) {
-          if (res.ok) showSent();
+        .then(function (res) { return res.json(); })
+        .then(function (result) {
+          if (result && result.success) showSent();
           else showError(btn);
         })
         .catch(function () { showError(btn); });
@@ -541,7 +562,7 @@
       done.className = "bg-green-50 border border-green-200 rounded p-8 text-center";
       done.innerHTML =
         '<p class="font-heading font-bold text-green-800 text-lg uppercase tracking-wide mb-2">Message Sent!</p>' +
-        '<p class="text-green-700 text-sm">Thank you — we’ll be in touch within one business day.</p>';
+        '<p class="text-green-700 text-sm">Thank you — we’ll be in touch soon.</p>';
       form.parentNode.replaceChild(done, form);
     }
     function showError(btn) {

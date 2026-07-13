@@ -15,6 +15,7 @@
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const archiver = require("archiver");
 
 const ROOT = path.join(__dirname, "..");
 const OUT_DIR = path.join(ROOT, "out");
@@ -63,74 +64,94 @@ if (badFiles.length) {
 }
 console.log("verified: out/ is React-free with relative paths + embedded fonts.");
 
-// 4 — zip the contents of out/ so each file/folder lands at the zip ROOT.
-// Use tar/bsdtar (built into Windows 10/11, macOS and Linux): it writes
-// spec-compliant forward-slash paths, so the zip extracts cleanly on any host.
-// PowerShell 5.1's Compress-Archive writes backslashes, which break on Linux.
+// 4 — zip the CONTENTS of out/ into a REAL ZIP archive.
+// The old `tar -a -c -f x.zip` produced a *tar* archive with a .zip extension
+// (the GNU tar on this machine can't write the zip format at all), which Karl
+// couldn't open as a zip. `archiver` writes a spec-compliant zip with
+// forward-slash paths that extracts cleanly on Windows, macOS and Linux.
 //
-// We pass the top-level entries BY NAME instead of "." on purpose: archiving
-// "." makes tar record a single-period top-level folder, which Karl reported
-// breaks extraction in Windows Explorer. Naming the entries avoids that folder.
-const oldZips = fs.readdirSync(ROOT).filter((f) => /^white-sands-site.*\.zip$/.test(f));
-for (const z of oldZips) fs.unlinkSync(path.join(ROOT, z));
-const entries = fs
-  .readdirSync(OUT_DIR)
-  .map((e) => `"${e}"`)
-  .join(" ");
-run(`tar -a -c -f "${ZIP_NAME}" -C out ${entries}`);
-
-// 5 — find the previous release and list changed files since then
-let prevTag = "";
-try {
-  prevTag = capture("gh release list --limit 1 --json tagName --jq \".[0].tagName\"");
-} catch {
-  /* gh not ready or no releases yet */
+// Each top-level entry of out/ is added at the zip ROOT by name (never "."), so
+// there's no single-period wrapper folder — the Windows Explorer issue Karl hit.
+function zipOut(outDir, zipPath) {
+  return new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(zipPath);
+    const archive = archiver("zip", { zlib: { level: 9 } });
+    output.on("close", () => resolve(archive.pointer()));
+    output.on("error", reject); // e.g. zip file locked (Defender/OneDrive), disk full
+    archive.on("warning", (err) => (err.code === "ENOENT" ? console.warn(err) : reject(err)));
+    archive.on("error", reject);
+    archive.pipe(output);
+    for (const entry of fs.readdirSync(outDir)) {
+      const full = path.join(outDir, entry);
+      if (fs.statSync(full).isDirectory()) archive.directory(full, entry);
+      else archive.file(full, { name: entry });
+    }
+    archive.finalize();
+  });
 }
-let changed = "_First release — no previous build to diff against._";
-if (prevTag) {
-  // The release tag may not exist locally (it lives on GitHub). Its name ends in
-  // the commit short-sha (build-YYYY-MM-DD-<sha>), which IS in local history, so
-  // diff against whichever ref resolves. Fall back gracefully if neither does.
-  const prevSha = prevTag.split("-").pop();
-  let ref = null;
-  for (const candidate of [prevTag, prevSha]) {
-    try {
-      capture(`git rev-parse --verify --quiet "${candidate}^{commit}"`);
-      ref = candidate;
-      break;
-    } catch {
-      /* not a resolvable ref locally — try the next */
+
+(async () => {
+  const oldZips = fs.readdirSync(ROOT).filter((f) => /^white-sands-site.*\.zip$/.test(f));
+  for (const z of oldZips) fs.unlinkSync(path.join(ROOT, z));
+  const bytes = await zipOut(OUT_DIR, path.join(ROOT, ZIP_NAME));
+  console.log(`zipped out/ -> ${ZIP_NAME} (${(bytes / 1048576).toFixed(1)} MB, real ZIP)`);
+
+  // 5 — find the previous release and list changed files since then
+  let prevTag = "";
+  try {
+    prevTag = capture("gh release list --limit 1 --json tagName --jq \".[0].tagName\"");
+  } catch {
+    /* gh not ready or no releases yet */
+  }
+  let changed = "_First release — no previous build to diff against._";
+  if (prevTag) {
+    // The release tag may not exist locally (it lives on GitHub). Its name ends
+    // in the commit short-sha (build-YYYY-MM-DD-<sha>), which IS in local
+    // history, so diff against whichever ref resolves. Fall back if neither does.
+    const prevSha = prevTag.split("-").pop();
+    let ref = null;
+    for (const candidate of [prevTag, prevSha]) {
+      try {
+        capture(`git rev-parse --verify --quiet "${candidate}^{commit}"`);
+        ref = candidate;
+        break;
+      } catch {
+        /* not a resolvable ref locally — try the next */
+      }
+    }
+    if (ref) {
+      try {
+        const diff = capture(`git diff --name-only ${ref} HEAD`);
+        changed = diff
+          ? diff.split("\n").map((f) => `- \`${f}\``).join("\n")
+          : `_No source files changed since ${prevTag}._`;
+      } catch {
+        changed = `_Could not compute file diff against ${prevTag}._`;
+      }
+    } else {
+      changed = `_Previous release ${prevTag} not found in local history — diff skipped._`;
     }
   }
-  if (ref) {
-    try {
-      const diff = capture(`git diff --name-only ${ref} HEAD`);
-      changed = diff
-        ? diff.split("\n").map((f) => `- \`${f}\``).join("\n")
-        : `_No source files changed since ${prevTag}._`;
-    } catch {
-      changed = `_Could not compute file diff against ${prevTag}._`;
-    }
-  } else {
-    changed = `_Previous release ${prevTag} not found in local history — diff skipped._`;
+
+  // Tag this build by date + short commit so releases are unique and traceable.
+  const sha = capture("git rev-parse --short HEAD");
+  const tag = `build-${BUILD_DATE}-${sha}`;
+  const notesPath = path.join(ROOT, "RELEASE_NOTES.tmp.md");
+  fs.writeFileSync(
+    notesPath,
+    `Static build of the White Sands site (contents of \`out/\`).\n\n` +
+      `Open \`index.html\` directly in a browser (file://) or drop the folder on any host — ` +
+      `all paths are relative and fonts are embedded.\n\n` +
+      `## Files changed since ${prevTag || "the start"}\n\n${changed}\n`,
+  );
+
+  try {
+    run(`gh release create ${tag} "${ZIP_NAME}" --title "Site build ${tag}" --notes-file "${notesPath}"`);
+  } finally {
+    if (fs.existsSync(notesPath)) fs.unlinkSync(notesPath);
   }
-}
-
-// Tag this build by date + short commit so releases are unique and traceable.
-const sha = capture("git rev-parse --short HEAD");
-const tag = `build-${BUILD_DATE}-${sha}`;
-const notesPath = path.join(ROOT, "RELEASE_NOTES.tmp.md");
-fs.writeFileSync(
-  notesPath,
-  `Static build of the White Sands site (contents of \`out/\`).\n\n` +
-    `Open \`index.html\` directly in a browser (file://) or drop the folder on any host — ` +
-    `all paths are relative and fonts are embedded.\n\n` +
-    `## Files changed since ${prevTag || "the start"}\n\n${changed}\n`,
-);
-
-try {
-  run(`gh release create ${tag} "${ZIP_NAME}" --title "Site build ${tag}" --notes-file "${notesPath}"`);
-} finally {
-  if (fs.existsSync(notesPath)) fs.unlinkSync(notesPath);
-}
-console.log(`\nRelease ${tag} created with ${ZIP_NAME} attached.`);
+  console.log(`\nRelease ${tag} created with ${ZIP_NAME} attached.`);
+})().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
