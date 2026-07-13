@@ -9,17 +9,34 @@ export default function ContactForm() {
     e.preventDefault();
     setStatus("sending");
     const form = e.currentTarget;
-    const data = new FormData(form);
+    const formData = new FormData(form);
+
+    // Honeypot: real visitors never fill this in — bots that auto-fill every field do.
+    if (formData.get("botcheck")) {
+      setStatus("sent");
+      form.reset();
+      return;
+    }
+
+    const payload = {
+      access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
+      subject: "New message from White Sands Construction website",
+      from_name: "White Sands Construction Website",
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      project: formData.get("project"),
+      message: formData.get("message"),
+    };
 
     try {
-      // Submits to RSForm!Pro in Joomla. Replace RSFORM_ID with the form's ID
-      // (Joomla admin → RSForm!Pro → the form). Joomla handles the email via SMTP.
-      const res = await fetch("/index.php?option=com_rsform&task=submissions.submit&formId=RSFORM_ID", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-      if (res.ok) {
+      const result = await res.json();
+      if (result.success) {
         setStatus("sent");
         form.reset();
       } else {
@@ -37,7 +54,7 @@ export default function ContactForm() {
           Message Sent!
         </p>
         <p className="text-green-700 text-sm">
-          Thank you — we&apos;ll be in touch within one business day.
+          Thank you — we&apos;ll be in touch soon.
         </p>
       </div>
     );
@@ -45,6 +62,14 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-50 rounded p-8 md:p-10">
+      <input
+        type="checkbox"
+        name="botcheck"
+        className="hidden"
+        style={{ display: "none" }}
+        tabIndex={-1}
+        autoComplete="off"
+      />
       <h3 className="font-heading font-black text-lg uppercase tracking-wide mb-8">
         Send Us a Message
       </h3>
@@ -126,9 +151,6 @@ export default function ContactForm() {
       >
         {status === "sending" ? "Sending…" : "Send Message"}
       </button>
-      <p className="text-center text-xs text-gray-400 mt-3">
-        We typically respond within one business day.
-      </p>
     </form>
   );
 }
