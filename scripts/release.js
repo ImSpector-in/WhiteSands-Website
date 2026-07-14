@@ -21,8 +21,14 @@ const ROOT = path.join(__dirname, "..");
 const OUT_DIR = path.join(ROOT, "out");
 // Build date stamps both the zip filename and the release tag, per Karl's
 // request to include the build date in the zip name (e.g.
-// white-sands-site-2026-06-28.zip).
-const BUILD_DATE = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+// white-sands-site-2026-06-28.zip). Use the project's Hawaiʻi local date so
+// releases remain recognizable to the team even after UTC midnight.
+const BUILD_DATE = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Pacific/Honolulu",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+}).format(new Date()); // YYYY-MM-DD
 const ZIP_NAME = `white-sands-site-${BUILD_DATE}.zip`;
 
 const run = (cmd) => {
