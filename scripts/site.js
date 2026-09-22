@@ -13,7 +13,7 @@
  *   4. Bento gallery      (home)        — click-to-enlarge, shares the lightbox
  *   5. Stats count-up     (home)        — numbers count from zero once in view
  *   6. Page-load reveal   (every page)  — sections fade/slide in once
- *   7. Contact form       (contact)     — submit handler with status states
+ *   7. Contact form       (contact)     — submit handler, honeypot + hCaptcha
  */
 (function () {
   "use strict";
@@ -522,7 +522,7 @@
     // this client-side file, which is exactly how Web3Forms is used on a static
     // site. Source of truth is NEXT_PUBLIC_WEB3FORMS_KEY in .env.local; this
     // literal is written from it by scripts/inject-web3forms-key.js.
-    var WEB3FORMS_KEY = "aaee12e1-68fa-4726-b65b-201fea99f606";
+    var WEB3FORMS_KEY = "e875c7a0-d415-419e-86d3-c0f734fe2b99";
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -532,6 +532,17 @@
       // Honeypot: real visitors never fill "botcheck"; bots that auto-fill every
       // field do. Pretend success so the bot moves on, but send nothing.
       if (data.get("botcheck")) { showSent(); return; }
+
+      // hCaptcha token. Web3Forms enforces this server-side once the captcha is
+      // enabled on the access key, so a bot that skips the widget is rejected
+      // there too — this check only gives a real visitor a useful message
+      // instead of a generic failure.
+      var captchaField = form.querySelector('[name="h-captcha-response"]');
+      var captchaToken = captchaField ? captchaField.value : "";
+      if (!captchaToken) {
+        showError(btn, "Please complete the captcha above.");
+        return;
+      }
 
       if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
 
@@ -547,14 +558,15 @@
           email: data.get("email"),
           project: data.get("project"),
           message: data.get("message"),
+          "h-captcha-response": captchaToken,
         }),
       })
         .then(function (res) { return res.json(); })
         .then(function (result) {
           if (result && result.success) showSent();
-          else showError(btn);
+          else { showError(btn); resetCaptcha(); }
         })
-        .catch(function () { showError(btn); });
+        .catch(function () { showError(btn); resetCaptcha(); });
     });
 
     function showSent() {
@@ -565,13 +577,22 @@
         '<p class="text-green-700 text-sm">Thank you — we’ll be in touch soon.</p>';
       form.parentNode.replaceChild(done, form);
     }
-    function showError(btn) {
+    function showError(btn, msg) {
       if (btn) { btn.disabled = false; btn.textContent = "Send Message"; }
-      if (form.querySelector(".form-error")) return;
-      var err = document.createElement("p");
-      err.className = "form-error text-red-600 text-sm mb-4";
-      err.textContent = "Something went wrong — please try again or call us directly.";
-      form.insertBefore(err, btn ? btn.parentNode === form ? btn : form.lastChild : form.lastChild);
+      var err = form.querySelector(".form-error");
+      if (!err) {
+        err = document.createElement("p");
+        err.className = "form-error text-red-600 text-sm mb-4";
+        form.insertBefore(err, btn ? btn.parentNode === form ? btn : form.lastChild : form.lastChild);
+      }
+      err.textContent =
+        msg || "Something went wrong — please try again or call us directly.";
+    }
+
+    function resetCaptcha() {
+      if (window.hcaptcha && typeof window.hcaptcha.reset === "function") {
+        window.hcaptcha.reset();
+      }
     }
   }
 })();

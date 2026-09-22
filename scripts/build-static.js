@@ -154,6 +154,21 @@ function transformHtml(html, page) {
     '  <script src="./js/site.js" defer></script>\n</body>',
   );
 
+  // 7 — contact page only: the Web3Forms client script, which renders the
+  // hCaptcha widget into the .h-captcha div. Without it the widget never
+  // appears and every submission is rejected by Web3Forms, so fail loudly if
+  // the div is missing rather than shipping a dead form.
+  if (page === "contact") {
+    if (!html.includes('class="h-captcha')) {
+      console.error("ABORT: contact page has no .h-captcha div — ContactForm.tsx changed. Update transformHtml().");
+      process.exit(1);
+    }
+    html = html.replace(
+      "</body>",
+      '  <script src="https://web3forms.com/client/script.js" async defer></script>\n</body>',
+    );
+  }
+
   return html;
 }
 

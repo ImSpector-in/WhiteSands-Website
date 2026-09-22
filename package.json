@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/postbuild.js && node scripts/build-static.js",
+    "build": "node scripts/inject-web3forms-key.js && next build && node scripts/postbuild.js && node scripts/build-static.js",
     "start": "next start",
     "release": "node scripts/release.js",
     "lint": "eslint"

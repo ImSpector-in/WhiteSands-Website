@@ -1,13 +1,28 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 
 export default function ContactForm() {
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "sent" | "error" | "captcha"
+  >("idle");
+
+  // Load the Web3Forms client script, which finds .h-captcha and renders the
+  // widget. Done here (browser-only) rather than in the markup so the static
+  // export stays clean — scripts/build-static.js injects the real <script> tag
+  // into out/contact.html, which is what actually ships.
+  useEffect(() => {
+    const SRC = "https://web3forms.com/client/script.js";
+    if (document.querySelector(`script[src="${SRC}"]`)) return;
+    const el = document.createElement("script");
+    el.src = SRC;
+    el.async = true;
+    el.defer = true;
+    document.body.appendChild(el);
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("sending");
     const form = e.currentTarget;
     const formData = new FormData(form);
 
@@ -18,6 +33,17 @@ export default function ContactForm() {
       return;
     }
 
+    // hCaptcha token. Web3Forms also enforces this server-side, so a bot that
+    // skips the widget is rejected there too — this check is only so a real
+    // visitor gets a useful message instead of a generic failure.
+    const captcha = formData.get("h-captcha-response");
+    if (!captcha) {
+      setStatus("captcha");
+      return;
+    }
+
+    setStatus("sending");
+
     const payload = {
       access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
       subject: "New message from White Sands Construction website",
@@ -27,6 +53,7 @@ export default function ContactForm() {
       email: formData.get("email"),
       project: formData.get("project"),
       message: formData.get("message"),
+      "h-captcha-response": captcha,
     };
 
     try {
@@ -41,10 +68,16 @@ export default function ContactForm() {
         form.reset();
       } else {
         setStatus("error");
+        resetCaptcha();
       }
     } catch {
       setStatus("error");
+      resetCaptcha();
     }
+  }
+
+  function resetCaptcha() {
+    (window as unknown as { hcaptcha?: { reset: () => void } }).hcaptcha?.reset();
   }
 
   if (status === "sent") {
@@ -137,6 +170,14 @@ export default function ContactForm() {
           className="w-full px-4 py-3 border border-gray-300 rounded text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition resize-y"
         />
       </div>
+
+      <div className="h-captcha mb-5" data-captcha="true" />
+
+      {status === "captcha" && (
+        <p className="text-red-600 text-sm mb-4">
+          Please complete the captcha above.
+        </p>
+      )}
 
       {status === "error" && (
         <p className="text-red-600 text-sm mb-4">
