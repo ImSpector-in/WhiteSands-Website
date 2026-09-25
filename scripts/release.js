@@ -15,7 +15,9 @@
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 const archiver = require("archiver");
+const { diffBuiltSite, formatBuiltDiff } = require("./diff-built-site.js");
 
 const ROOT = path.join(__dirname, "..");
 const OUT_DIR = path.join(ROOT, "out");
@@ -30,6 +32,10 @@ const BUILD_DATE = new Intl.DateTimeFormat("en-CA", {
   day: "2-digit",
 }).format(new Date()); // YYYY-MM-DD
 const ZIP_NAME = `white-sands-site-${BUILD_DATE}.zip`;
+
+// --dry-run builds and composes the notes but publishes nothing, so a release
+// page can be previewed before it exists.
+const DRY_RUN = process.argv.includes("--dry-run");
 
 const run = (cmd) => {
   console.log(`$ ${cmd}`);
@@ -139,6 +145,22 @@ function zipOut(outDir, zipPath) {
     }
   }
 
+  // Karl reviews the ZIP, not the repo: one edit to a shared component rewrites
+  // several rendered pages, and the source diff above never shows that. Compare
+  // the built site against the zip attached to the previous release. This can
+  // never fail the release — an unavailable comparison just says so in the notes.
+  const builtDiff = diffBuiltSite({
+    prevTag,
+    outDir: OUT_DIR,
+    tmpDir: path.join(os.tmpdir(), "white-sands-release-diff"),
+    cwd: ROOT,
+  });
+  console.log(
+    builtDiff.ok
+      ? `site diff vs ${prevTag}: ${builtDiff.added.length} added, ${builtDiff.modified.length} modified, ${builtDiff.removed.length} removed`
+      : `site diff skipped: ${builtDiff.reason}`,
+  );
+
   // Tag this build by date + short commit so releases are unique and traceable.
   const sha = capture("git rev-parse --short HEAD");
   const tag = `build-${BUILD_DATE}-${sha}`;
@@ -148,15 +170,24 @@ function zipOut(outDir, zipPath) {
     `Static build of the White Sands site (contents of \`out/\`).\n\n` +
       `Open \`index.html\` directly in a browser (file://) or drop the folder on any host — ` +
       `all paths are relative and fonts are embedded.\n\n` +
-      `## Files changed since ${prevTag || "the start"}\n\n${changed}\n`,
+      `## Site files changed since ${prevTag || "the start"}\n\n${formatBuiltDiff(builtDiff)}\n\n## Source files changed since ${prevTag || "the start"}\n\n${changed}\n`,
   );
 
   try {
-    run(`gh release create ${tag} "${ZIP_NAME}" --title "Site build ${tag}" --notes-file "${notesPath}"`);
+    if (DRY_RUN) {
+      console.log("--- DRY RUN — release notes that WOULD be published ---");
+      console.log(fs.readFileSync(notesPath, "utf8"));
+    } else {
+      run(`gh release create ${tag} "${ZIP_NAME}" --title "Site build ${tag}" --notes-file "${notesPath}"`);
+    }
   } finally {
     if (fs.existsSync(notesPath)) fs.unlinkSync(notesPath);
   }
-  console.log(`\nRelease ${tag} created with ${ZIP_NAME} attached.`);
+  console.log(
+    DRY_RUN
+      ? `\nDRY RUN — would create ${tag} with ${ZIP_NAME}. Nothing published.`
+      : `\nRelease ${tag} created with ${ZIP_NAME} attached.`,
+  );
 })().catch((e) => {
   console.error(e);
   process.exit(1);
