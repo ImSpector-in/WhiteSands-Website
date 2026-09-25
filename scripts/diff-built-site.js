@@ -18,7 +18,7 @@
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
 const AdmZip = require("adm-zip");
 
 // Zip paths are always forward-slashed and never start with "./".
@@ -54,14 +54,23 @@ function hashReleaseZip(zipPath) {
 function diffBuiltSite({ prevTag, outDir, tmpDir, cwd }) {
   if (!prevTag) return { ok: false, reason: "no previous release to compare against" };
 
+  // prevTag comes from `gh release list`, i.e. from GitHub, so it is untrusted
+  // input. It is passed to gh as an argv entry (never a shell string) and is
+  // checked against the shape our own tags use, so a crafted release name
+  // cannot inject a command into the machine cutting the release.
+  if (!/^[A-Za-z0-9._-]+$/.test(prevTag)) {
+    return { ok: false, reason: `previous release tag ${JSON.stringify(prevTag)} has an unexpected format` };
+  }
+
   // Download the previous release's zip asset into a scratch dir.
   fs.mkdirSync(tmpDir, { recursive: true });
   for (const f of fs.readdirSync(tmpDir)) fs.rmSync(path.join(tmpDir, f), { force: true });
   try {
-    execSync(`gh release download ${prevTag} --pattern "*.zip" --dir "${tmpDir}" --clobber`, {
-      cwd,
-      stdio: "pipe",
-    });
+    execFileSync(
+      "gh",
+      ["release", "download", prevTag, "--pattern", "*.zip", "--dir", tmpDir, "--clobber"],
+      { cwd, stdio: "pipe" },
+    );
   } catch (e) {
     return { ok: false, reason: `could not download the zip attached to ${prevTag}` };
   }
